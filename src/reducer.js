@@ -1,6 +1,7 @@
 const defaultState = {
   dms: [],
   othersFriends: [],
+  messages: [],
   everyDM: []
 }
 
@@ -100,6 +101,6 @@ export default function(state = defaultState, action) {
       });
     }
   }
-console.log('everyDM: ', state.everyDM)
+console.log('state: ', state)
 return state;
 }

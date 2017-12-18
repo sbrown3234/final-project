@@ -1,6 +1,6 @@
 import * as io from 'socket.io-client';
 import axios from 'axios';
-import { userJoined, onlineUsers, userLeft, chatMessage, chatMessages } from './actions';
+import { userJoined, onlineUsers, userLeft, chatMessage, chatMessages, directMessages, directMessage } from './actions';
 import { store } from './start';
 
 let socket;
@@ -11,6 +11,7 @@ export function getSocket() {
     socket = io.connect();
 
     socket.on('connect', () => {
+      console.log('socket info: ', socket)
       axios.get('/connected/' + socket.id).then((data) => {
         console.log('(socket.js) on connect: ', data)
       })
@@ -20,6 +21,7 @@ export function getSocket() {
       })
 
       socket.on('chatMessages', ({messages}) => {
+        console.log('in socket chat messages: ', messages)
         store.dispatch(chatMessages(messages))
       })
 

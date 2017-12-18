@@ -61,10 +61,18 @@
     const q = `SELECT * FROM users WHERE id=$1;`
     const params = [id];
     return db.query(q,params).then((results) => {
-      console.log('user info: ', results.rows[0])
       return results.rows[0];
     }).catch((err) => {
       console.log('userInfo db err: ', err);
+    })
+  }
+
+  exports.getAlbums = (id) => {
+    const  q = `SELECT * FROM albums WHERE user_id = $1;`
+    const params = [id];
+    return db.query(q,params).then((results) => {
+      console.log('getAlbums res: ', results.rows)
+      return results.rows
     })
   }
 
@@ -179,6 +187,7 @@
     FROM users
     JOIN chat
     ON (sender_id = users.id)
+    AND (recipient_id IS NULL)
     ORDER BY chat.created_at ASC
     LIMIT 10;`
     return db.query(q).then((results) => {
@@ -194,6 +203,8 @@
     const params = [userId, message];
     return db.query(q,params).then((results)=> {
       return results.rows
+    }).catch((err) => {
+      console.log('chatMessage err: ', err)
     })
   }
 
@@ -211,7 +222,6 @@
     LIMIT 10;`
     params = [userId, otherId]
     return db.query(q, params).then((results) => {
-      console.log('db dms: ', results.rows)
       return results.rows
     }).catch((err) => {
       console.log('getDMs err: ', err)
@@ -223,8 +233,9 @@
     VALUES ($1, $2, $3);`
     const params = [userId, otherId , message];
     return db.query(q,params).then((results) => {
-      console.log('db messages: ', results.rows)
       return results.rows
+    }).catch((err) => {
+      console.log('DM insert err: ', err)
     })
   }
 

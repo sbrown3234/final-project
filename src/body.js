@@ -1,7 +1,7 @@
 import React from 'react';
 
 export default function Body(props) {
-  const { profile_pic, firstname, lastname, bio, handleChange, showBio, toggleBio, update } = props
+  const { bio, handleChange, showBio, toggleBio, update } = props
 
   return (
     <div className="bio">

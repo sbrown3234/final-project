@@ -10,7 +10,11 @@ import OP from "./op";
 import Online from "./online";
 import Chat from "./chat";
 import PrivateChat from "./privateChat";
-// import Messages from "./messages"
+// import Messages from "./messages";
+// import Collage from './collage';
+// import Feed from './feed';
+import Albums from './albums'
+import About from './about';
 import { Provider } from "react-redux";
 import { createStore, applyMiddleware } from "redux";
 import reduxPromise from "redux-promise";
@@ -36,9 +40,13 @@ const loggedInRouter = (
   <Provider store={ store }>
     <Router history={browserHistory}>
         <Route path="/" component={App}>
+        <Route path="/about" component={About}/>
         <Route path="/user/profile/:id" component={OP} />
         <Route path="/online" component={Online} />
         <Route path="/public-chatroom" component={Chat} />
+        <Route path="/album/:id" component={Albums} />
+        {/* <Route path="/feed" component={Feed}/> */}
+        {/* <Route path="/collage" component={Collage} /> */}
         {/* <Route path="/messages/" component={Messages} /> */}
         <Route path="/messages/:id" component={PrivateChat} />
         <IndexRoute component={Profile} />

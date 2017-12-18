@@ -30,7 +30,8 @@ export default class OP extends React.Component {
 
   render() {
     const { firstname, lastname, profile_pic, cover_photo, bio, error } = this.state;
-    const { id } = this.props.params
+    const { id } = this.props.params;
+
 
 
     return (
@@ -53,7 +54,7 @@ export default class OP extends React.Component {
           <div className="bio">
             <h1>About {firstname}:</h1>
             {!bio && <p>Looks like {firstname} is too busy to tell you about themselves</p>}
-            {!!bio}
+            {bio}
           </div>
           <div className="other-container">
           <h1>Comrades-In-Collaboration</h1>

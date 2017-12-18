@@ -46,6 +46,7 @@ class Chat extends React.Component {
         <div className="message-window" ref={elem => this.elem = elem}>
             <div className="chat-messages">
               {!!chatMessages && messages}
+              {(chatMessages.length == 0) && <p>Start the converstation</p>}
             </div>
         </div>
         <div className="message-bar">

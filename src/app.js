@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import Icon from './icon';
 import Nav from './nav';
+import Footer from './footer'
 import Pic from './pic';
 import { getSocket } from './socket'
 
@@ -124,6 +125,7 @@ export default class App extends React.Component {
   }
 
   componentDidMount(){
+    getSocket()
     axios.get('/userInfo').then(({data}) => {
       this.setState({
         firstname: data.firstname,
@@ -174,6 +176,7 @@ export default class App extends React.Component {
         <Icon />
         <Nav profile_pic = {profile_pic} />
         {children}
+        <Footer />
       </div>
     )
   }

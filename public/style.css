@@ -144,6 +144,7 @@ input {
   height: 250px;
   width: 300px;
   z-index: 50;
+  border: white 4px solid;
 }
 
 .user-image {
@@ -168,28 +169,64 @@ input {
   width: 100%;
 }
 
-#nav-bar {
+#nav-bar, footer {
   width: 100%;
   display: flex;
-
+  background-color: rgba(0,0,0,0.9);
 }
 
-#links {
+a {
+  text-decoration: none;
+}
+
+a:hover {
+  background-color: #FF1493;
+  color: white;
+  text-decoration: bold;
+  font-size: 20px;
+}
+
+footer {
+  color: white;
+  padding-top: 10px;
+  margin-top: 200px;
+  justify-content: space-between;
+}
+
+footer p {
+  font-size: 16px;
+}
+
+footer a {
+  color: white;
+  padding: 5px;
+}
+
+#footer-links {
+  display: flex;
+  flex-direction: column;
+  align-content: flex-end;
+}
+
+.links {
   position: relative;
   left: 30%;
   top: 25px;
 }
 
-#links a {
+.links a {
   padding: 5px 5px;
+  color: white;
 }
 
 #sn-icon {
-  height: 50px;
+  height: 40px;
   width: 50px;
+  background: white;
   position: absolute;
   float: left;
   padding: 10px 5px;
+  overflow: hidden;
 }
 
 #nav-pic {
@@ -235,7 +272,6 @@ input {
 }
 
 .req-lists {
-  width: 33%;
   display: flex;
   flex-direction: row;
   justify-content: flex-end;

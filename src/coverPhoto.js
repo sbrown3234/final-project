@@ -4,7 +4,6 @@ export default function CoverPic (props) {
 
     const { cover_photo } = props
 
-    console.log('cover: ', cover_photo)
 
     return  (
       <div className="cover-photo">

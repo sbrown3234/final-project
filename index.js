@@ -97,7 +97,13 @@
     let userId;
     let otherId;
 
+    console.log('socket info: ', socket)
 
+    dbModule.getMessages().then((results) => {
+      io.sockets.sockets[socketId].emit('chatMessages', {messages: results})
+    }).catch((err) => {
+      console.log('getMessages index err: ', err)
+    })
 
 
     socket.on('newMessage', ({message, user}) => {
@@ -123,8 +129,11 @@
       let otherUser = onlineUsers.filter(onlineUser => onlineUser.userId == otherId)
       let otherUserSockets = otherUser.find(otherUsers => otherUsers.socketId)
 
-      console.log('otherUser: ', otherUser)
-      console.log('socket: ', otherUserSockets)
+      let currUser = onlineUsers.filter(onlineUser => onlineUser.userId == userId)
+      let currUserSocket = otherUser.find(otherUsers => otherUsers.socketId)
+
+      console.log('otherUser: ', currUser)
+      console.log('socket: ', currUserSocket)
 
 
       Promise.all([
@@ -132,17 +141,10 @@
         dbModule.userInfo(userId)
       ]).then(({x, results}) => {
         console.log('in DM: ', message)
-        io.sockets.sockets[otherUserSockets].emit('directMessage', {data: message})
+        io.sockets.sockets[otherUserSockets, currUserSocket].emit('directMessage', {data: message})
       }).catch((err) => {
         console.log('newDM post err: ', err)
       })
-    })
-
-
-    dbModule.getMessages().then((results) => {
-      io.sockets.sockets[socketId].emit('chatMessages', {messages: results})
-    }).catch((err) => {
-      console.log('getMessages index err: ', err)
     })
 
     socket.on('disconnect', () => {

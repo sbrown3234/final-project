@@ -78,6 +78,7 @@ export function chatMessage(message) {
 }
 
 export function chatMessages(messages) {
+  console.log('in chat messages: ', messages)
   return {
     type: "CHAT_MESSAGES",
     messages: messages

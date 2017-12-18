@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { getUserFriends, addFriend, endFriend } from './actions';
+import { getAllDMs } from './actions';
 import Pending from './pending';
 import DMs from './dms';
 
@@ -22,7 +22,7 @@ class Messages extends React.Component {
 const mapStateToProps = function (state) {
   console.log('in directMessages: ', state)
   return {
-    directMessages: state.everyDM && state.everyDM.filter
+    directMessages: state.everyDM && state.everyDM.filter(DM => )
   }
 }
 

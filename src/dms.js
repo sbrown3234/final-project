@@ -13,6 +13,7 @@ export default class DMs extends React.Component {
         {directMessage.map(messages=> <div className="messenger">
           <Link to={`messages/${messages.id}`}><img className="messenger-image" src={messages.profile_pic} /></Link>
           <p>{messages.firstname + " " + messages.lastname}</p>
+          <p>{messages.messages[0]}</p>
         </div>
       )}
     </div>
