@@ -145,6 +145,7 @@ export default class App extends React.Component {
   render() {
     console.log('rendering app')
 
+
     const { firstname, lastname, profile_pic, cover_photo, bio, id, showBio, showUploader } = this.state;
 
     const children = React.cloneElement(this.props.children, {
@@ -170,8 +171,8 @@ export default class App extends React.Component {
       return (
         <div>Loading..... </div>
       )
-
     }
+
     return (
       <div id="app">
         <Icon />

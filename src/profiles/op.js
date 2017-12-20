@@ -50,6 +50,7 @@ export default class OP extends React.Component {
           lastname = {lastname}
           cover_photo = {cover_photo}
         />
+
         <div className="bio-friends">
           <div className="bio">
             <h1>About {firstname}:</h1>
@@ -58,8 +59,13 @@ export default class OP extends React.Component {
           </div>
           <div className="other-container">
           <h1>Comrades-In-Collaboration</h1>
+          <div className="list">
           <OtherFriends otherId={id}/>
+          </div>
         </div>
+        </div>
+
+        <div className="albums">
         </div>
 
       </div>

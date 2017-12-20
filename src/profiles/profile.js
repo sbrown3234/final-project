@@ -53,6 +53,8 @@ export default class Profile extends React.Component {
           />
           <Friends />
         </div>
+        <div className="albums">
+        </div>
 
 
       </div>
