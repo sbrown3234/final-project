@@ -27,29 +27,6 @@ export function getAllUsers() {
   })
 }
 
-export function getAllDMs() {
-  return axios.get('/get-all-dms').then(({data}) => {
-    console.log('in getAllDMs action: ', data.messages)
-    return {
-      type: "GET_ALL_DM",
-      messages: data.messages
-    }
-  })
-}
-
-
-export function getDMs(id) {
-  return axios.get('/dm/'+id).then(({data})=> {
-    console.log('in getDMS: ', data)
-    return {
-      type: "DIRECT_MESSAGES",
-      DMs: data.messages
-    }
-  }).catch((err) => {
-    console.log('getDMs action err: ', err)
-  })
-}
-
 export function addFriend(otherId) {
   return axios.post('/accept-request/' + otherId).then((results) => {
     return {
@@ -78,8 +55,7 @@ export function onlineUsers(data) {
   }
 }
 
-export function chatMessage(message) {
-  console.log('in chatMessage: ', message)
+export function chatMessage({message}) {
   return {
     type: "NEW_MESSAGE",
     message: message
@@ -87,15 +63,36 @@ export function chatMessage(message) {
 }
 
 export function chatMessages(messages) {
-  console.log('in chat messages: ', messages)
   return {
     type: "CHAT_MESSAGES",
     messages: messages
   }
 }
 
+export function getAllDMs() {
+  return axios.get('/get-all-dms').then(({data}) => {
+    console.log('in getAllDMs action: ', data.messages)
+    return {
+      type: "GET_ALL_DM",
+      messages: data.messages
+    }
+  })
+}
+
+export function getDMs(id) {
+  return axios.get('/dm/'+id).then(({data})=> {
+    console.log('in getDMS: ', data)
+    return {
+      type: "DIRECT_MESSAGES",
+      DMs: data.messages
+    }
+  }).catch((err) => {
+    console.log('getDMs action err: ', err)
+  })
+}
+
 export function directMessage(message) {
-  console.log('in chatMessage: ', message)
+  console.log('newDM: ', message)
   return {
     type: "DIRECT_MESSAGE",
     message: message
@@ -103,7 +100,6 @@ export function directMessage(message) {
 }
 
 export function userJoined(data) {
-  console.log('in userJoined: ', data)
   return {
     type: "USER_JOINED",
     user: data,
@@ -111,7 +107,6 @@ export function userJoined(data) {
 }
 
 export function userLeft(data) {
-  console.log('userLeft: ', data)
   return {
     type: "USER_LEFT",
     user: data,

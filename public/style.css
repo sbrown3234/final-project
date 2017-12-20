@@ -407,10 +407,6 @@ footer a {
   margin-top: 20px;
 }
 
-.upper-canvas, .lower-canvas {
-  background: white;
-}
-
 #collage-container {
   display: flex;
   background-image: url('./images/ps-jan7-1873_lead.jpg');
@@ -426,6 +422,10 @@ footer a {
   flex-direction: column;
   color: white;
   left: 40%;
+}
+
+.controls button {
+  margin: 10px;
 }
 
 .controls input {

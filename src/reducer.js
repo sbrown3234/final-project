@@ -72,8 +72,9 @@ export default function(state = defaultState, action) {
   }
 
   if (action.type == 'NEW_MESSAGE') {
+    console.log("new message: ", action.message)
     state = Object.assign({}, state, {
-      messages: [...state.messages, action.message]
+      messages: [...state.messages, action.message[0]]
     })
   }
 
@@ -92,7 +93,7 @@ export default function(state = defaultState, action) {
 
   if (action.type == 'DIRECT_MESSAGE') {
     state = Object.assign({}, state, {
-      dms: [...state.dms, action.message]
+      dms: [...state.dms, action.message[0]]
     })
   }
 
@@ -107,6 +108,6 @@ export default function(state = defaultState, action) {
       });
     }
   }
-console.log('state: ', state)
+console.log('state bitches: ', state)
 return state;
 }

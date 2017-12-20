@@ -5,6 +5,7 @@ import User from './user'
 export default class Accepted extends React.Component {
   render() {
     const { users, endFriend } = this.props
+
     if(!users) {
       return null;
     }
@@ -23,5 +24,3 @@ export default class Accepted extends React.Component {
     )
   }
 }
-
-// export default connect(mapStateToProps, mapDispatchesToProps)(Pending)

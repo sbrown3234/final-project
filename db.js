@@ -195,8 +195,7 @@
     JOIN chat
     ON (sender_id = users.id)
     AND (recipient_id IS NULL)
-    ORDER BY chat.created_at ASC
-    LIMIT 10;`
+    ORDER BY chat.created_at ASC;`
     return db.query(q).then((results) => {
       return results.rows
     }).catch((err) => {
@@ -215,6 +214,53 @@
     })
   }
 
+  exports.userMessage = (userId) => {
+    const q = `SELECT users.id, firstname, lastname, profile_pic, chat.created_at, sender_id, message
+    FROM users
+    JOIN chat
+    ON sender_id = users.id
+    WHERE sender_id = $1
+    ORDER BY chat.created_at DESC
+    LIMIT 1;`
+    const params = [userId]
+    return db.query(q,params).then((results) => {
+      console.log('results', results.rows)
+      return results.rows
+    }).catch((err)=> {
+      console.log('userMessage pic err: ', err)
+    })
+  }
+  
+  exports.directMessage = (userId, otherId, message) => {
+    const q = `INSERT INTO chat (sender_id, recipient_id, message)
+    VALUES ($1, $2, $3);`
+    const params = [userId, otherId , message];
+    return db.query(q,params).then((results) => {
+      return results.rows
+    }).catch((err) => {
+      console.log('DM insert err: ', err)
+    })
+  }
+
+  exports.userDMessage = (userId, otherId) => {
+    const q = `SELECT users.id, firstname, lastname, profile_pic, chat.created_at, sender_id, message
+    FROM users
+    JOIN chat
+    ON sender_id = users.id
+    WHERE (
+      sender_id = $1 AND recipient_id = $2
+    )
+    ORDER BY chat.created_at DESC
+    LIMIT 1;`
+    const params = [userId, otherId]
+    return db.query(q,params).then((results) => {
+      console.log('results', results.rows)
+      return results.rows
+    }).catch((err)=> {
+      console.log('userMessage pic err: ', err)
+    })
+  }
+
   exports.getDMs = (userId, otherId) => {
     const q = `SELECT users.id, firstname, lastname, profile_pic, chat.created_at, sender_id, message
     FROM users
@@ -225,24 +271,12 @@
     ) OR (
       sender_id = $2 AND recipient_id = $1
     )
-    ORDER BY chat.created_at ASC
-    LIMIT 10;`
+    ORDER BY chat.created_at ASC;`
     params = [userId, otherId]
     return db.query(q, params).then((results) => {
       return results.rows
     }).catch((err) => {
       console.log('getDMs err: ', err)
-    })
-  }
-
-  exports.directMessage = (userId, otherId, message) => {
-    const q = `INSERT INTO chat (sender_id, recipient_id, message)
-    VALUES ($1, $2, $3);`
-    const params = [userId, otherId , message];
-    return db.query(q,params).then((results) => {
-      return results.rows
-    }).catch((err) => {
-      console.log('DM insert err: ', err)
     })
   }
 

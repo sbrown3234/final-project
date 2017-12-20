@@ -105,7 +105,12 @@
     dbModule.accessInfo(socketId, browser, userAddress, timeAccessed)
 
     dbModule.getMessages().then((results) => {
-      io.sockets.sockets[socketId].emit('chatMessages', {messages: results})
+      if (results.length > 10) {
+        const newResults = results.slice(-10)
+        io.sockets.sockets[socketId].emit('chatMessages', {messages: newResults})
+      } else {
+        io.sockets.sockets[socketId].emit('chatMessages', {messages: results})
+      }
     }).catch((err) => {
       console.log('getMessages index err: ', err)
     })
@@ -114,12 +119,11 @@
     socket.on('newMessage', ({message, user}) => {
       userId = user;
 
-      Promise.all([
-        dbModule.chatMessage(userId, message),
-        dbModule.userInfo(userId)
-      ]).then(({x, results}) => {
-        console.log('in dbChat: ', message)
-        io.sockets.emit('chatMessage', {data: message})
+        dbModule.chatMessage(userId, message).then( () => {
+          dbModule.userMessage(userId).then((results) => {
+            console.log('fuck this shit: ', results)
+          io.sockets.emit('chatMessage', {message: results})
+        })
       }).catch((err) => {
         console.log('chatMessage post err: ', err)
       })
@@ -136,13 +140,13 @@
       let currUserSocket = otherUser.find(otherUsers => otherUsers.socketId)
 
 
-      Promise.all([
-        dbModule.directMessage(userId, otherId, message),
-        dbModule.userInfo(userId)
-      ]).then(({x, results}) => {
-        console.log('in DM: ', message)
-        io.sockets.sockets[otherUserSockets, currUserSocket].emit('directMessage', {data: message})
-      }).catch((err) => {
+      dbModule.directMessage(userId, otherId, message).then( () => {
+        dbModule.userDMessage(userId, otherId).then((results) => {
+          console.log('fuck this shit: ', results)
+          console.log('sockets: ', socketId)
+        io.sockets.sockets[socketId].emit('directMessage', {message: results})
+      })
+    }).catch((err) => {
         console.log('newDM post err: ', err)
       })
     })

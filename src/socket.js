@@ -11,7 +11,6 @@ export function getSocket() {
     socket = io.connect();
 
     socket.on('connect', () => {
-      console.log('socket info: ', socket)
       axios.get('/connected/' + socket.id).then((data) => {
         console.log('(socket.js) on connect: ', data)
       })
@@ -21,7 +20,6 @@ export function getSocket() {
       })
 
       socket.on('chatMessages', ({messages}) => {
-        console.log('in socket chat messages: ', messages)
         store.dispatch(chatMessages(messages))
       })
 

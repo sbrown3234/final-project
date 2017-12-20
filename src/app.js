@@ -27,9 +27,11 @@ export default class App extends React.Component {
   }
 
   handlePic(e) {
+    toggleUpload();
     this.setState({
       [e.target.name]: e.target.files[0]
     })
+    upload();
   }
 
   handleChange(e) {
@@ -81,8 +83,7 @@ export default class App extends React.Component {
     e.preventDefault();
   }
 
-  upload(e) {
-    this.toggleUpload()
+  upload() {
     const { file, coverPhoto } = this.state;
     if (!!file) {
       let formData = new FormData();
@@ -162,7 +163,6 @@ export default class App extends React.Component {
       toggleUpload : this.toggleUpload,
       toggleBio : this.toggleBio,
       update: this.update,
-      upload : this.upload,
       handleChange : this.handleChange,
       handlePic: this.handlePic
     });
