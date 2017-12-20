@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { socket } from './socket';
+import { socket } from '.././socket';
 import Chatroom from './Chatroom';
 
 class Chat extends React.Component {

@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { getAllDMs } from './actions';
-import Pending from './pending';
+import { getAllDMs } from '.././actions';
 import DMs from './dms';
 
 class Messages extends React.Component {

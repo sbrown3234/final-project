@@ -20,7 +20,6 @@ export default class Profile extends React.Component {
 
     const { firstname, lastname, bio,  profile_pic, cover_photo, toggleUpload, showUploader, toggleBio, showBio, handleChange, handlePic, upload, update } = this.props;
 
-    console.log("propping: ", this.props)
     return  (
       <div id="homepage">
         <Pic
@@ -54,7 +53,6 @@ export default class Profile extends React.Component {
           />
           <Friends />
         </div>
-
 
 
       </div>

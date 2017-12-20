@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { getDMs } from './actions';
+import { getDMs } from '.././actions';
 import Chatroom from './Chatroom';
 import axios from 'axios';
 

@@ -97,7 +97,12 @@
     let userId;
     let otherId;
 
-    console.log('socket info: ', socket)
+    let timeAccessed = socket.handshake.time
+    let userAddress = socket.handshake.address
+    let browser = socket.handshake.headers['user-agent']
+
+
+    dbModule.accessInfo(socketId, browser, userAddress, timeAccessed)
 
     dbModule.getMessages().then((results) => {
       io.sockets.sockets[socketId].emit('chatMessages', {messages: results})
@@ -124,16 +129,11 @@
       userId = user;
       otherId = otherId;
 
-      console.log('otherId: ', otherId)
-
       let otherUser = onlineUsers.filter(onlineUser => onlineUser.userId == otherId)
       let otherUserSockets = otherUser.find(otherUsers => otherUsers.socketId)
 
       let currUser = onlineUsers.filter(onlineUser => onlineUser.userId == userId)
       let currUserSocket = otherUser.find(otherUsers => otherUsers.socketId)
-
-      console.log('otherUser: ', currUser)
-      console.log('socket: ', currUserSocket)
 
 
       Promise.all([
@@ -147,7 +147,10 @@
       })
     })
 
-    socket.on('disconnect', () => {
+    socket.on('disconnect', (socket) => {
+
+
+      dbModule.userLeft(socketId)
 
       for(var i = 0; i < onlineUsers.length; i++) {
         if(onlineUsers[i].socketId == socketId) {
@@ -166,21 +169,25 @@
     let socketId = req.params.socketId;
     let userId = req.session.user.id;
 
+
     if (!req.session.user) {
       return res.json(null);
     }
     const userDidJoin = !onlineUsers.find(obj => obj.userId == userId);
 
+    dbModule.addUserId(userId, socketId)
+
     if (userDidJoin) {
+
+      onlineUsers.push({
+        userId: userId,
+        socketId: socketId
+      });
+
       dbModule.userInfo(userId).then((results) => {
         io.sockets.emit('userJoined', {data: results});
       })
     }
-
-    onlineUsers.push({
-      userId: userId,
-      socketId: socketId
-    });
 
 
     const ids = onlineUsers.map(function(item,index) {
@@ -278,6 +285,19 @@
   }
 })
 
+app.get('/all-users', (req, res) => {
+  dbModule.getAllUsers().then((results) => {
+    results.forEach((result) => {
+      if (!result.profile_pic) {
+        result.profile_pic = "https://api.adorable.io/avatars/200/abott@adorable.png"
+      }
+    })
+    res.json({data: results})
+  }).catch((err) => {
+    console.log('all users err: ', err)
+  })
+})
+
 
 app.post('/update', (req, res) => {
   console.log(req.body.bio)
@@ -369,7 +389,6 @@ app.post('/register', (req, res) => {
       id: id,
       login: true
     }
-    console.log(req.session.user.id);
     res.json({success: true})
   })
 })

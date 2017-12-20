@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { getUserFriends, addFriend, endFriend } from './actions';
+import { getUserFriends, addFriend, endFriend } from '.././actions';
 import Pending from './pending';
 import Accepted from './accepted';
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { getTheirFriends } from './actions';
+import { getTheirFriends } from '.././actions';
 import OtherUser from './otherUser';
 
 class OtherFriends extends React.Component {

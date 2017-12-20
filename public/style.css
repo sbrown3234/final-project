@@ -229,6 +229,23 @@ footer a {
   overflow: hidden;
 }
 
+#search {
+  position: absolute;
+  top: 15px;
+  left: 65px;
+}
+
+.result-list {
+  z-index: 100;
+}
+
+.search-pic {
+  height: 40px;
+  width: 40px;
+}
+
+
+
 #nav-pic {
   float: right;
   height: 50px;

@@ -18,6 +18,15 @@ export function getUserFriends() {
   })
 }
 
+export function getAllUsers() {
+  return axios.get('/all-users').then(({data}) => {
+    return {
+      type: "GET_ALL_USERS",
+      allUsers: data
+    }
+  })
+}
+
 export function getAllDMs() {
   return axios.get('/get-all-dms').then(({data}) => {
     console.log('in getAllDMs action: ', data.messages)

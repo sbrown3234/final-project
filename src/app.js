@@ -1,9 +1,10 @@
 import React from 'react';
 import axios from 'axios';
-import Icon from './icon';
-import Nav from './nav';
-import Footer from './footer'
-import Pic from './pic';
+import Icon from './profiles/icon';
+import Nav from './nav/nav';
+import Footer from './nav/footer'
+import Pic from './profiles/pic';
+import Search from './nav/search';
 import { getSocket } from './socket'
 
 
@@ -174,6 +175,7 @@ export default class App extends React.Component {
     return (
       <div id="app">
         <Icon />
+        <Search />
         <Nav profile_pic = {profile_pic} />
         {children}
         <Footer />

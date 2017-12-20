@@ -18,6 +18,12 @@ export default function(state = defaultState, action) {
     });
   }
 
+  if (action.type == 'GET_ALL_USERS') {
+    state = Object.assign({}, state, {
+      allUsers: action.allUsers.data
+    })
+  }
+
   if (action.type == 'ADD_FRIEND') {
     state = Object.assign({}, state, {
       users: state.users.map(user=> {

@@ -111,6 +111,13 @@
     })
   }
 
+  exports.getAllUsers = () => {
+    const q = `SELECT * from users`
+    return db.query(q).then((results) => {
+      return results.rows
+    })
+  }
+
   exports.checkStatus = (currUser, otherUser) => {
     const q = `SELECT status, sender_id
     FROM friend_requests
@@ -256,6 +263,33 @@
       return results.rows
     }).catch((err)=> {
       console.log('getAllDms err: ', err)
+    })
+  }
+
+  exports.accessInfo = (socketId, browser, address, time) => {
+    const q = `INSERT INTO user_info (socket_id, user_agent, remote_address, accessed_at)
+    VALUES ($1, $2, $3, $4);`
+    const params = [socketId, browser, address, time]
+    return db.query(q, params).then((results) => {
+      return results.rows[0]
+    }).catch((err)=> {
+      console.log('access insert err: ', err)
+    })
+  }
+
+  exports.addUserId = (id, socketId) => {
+    const q = `UPDATE user_info SET user_id = $1 WHERE (socket_id = $2);`
+    const params = [id, socketId]
+    return db.query(q,params).then((results) => {
+      return results.rows[0]
+    })
+  }
+
+  exports.userLeft = (socketId) => {
+    const q = `UPDATE user_info SET left_at = CURRENT_TIMESTAMP WHERE (socket_id = $1);`
+    const params = [socketId];
+    return db.query(q,params).then((results) => {
+      return results.rows[0]
     })
   }
 
