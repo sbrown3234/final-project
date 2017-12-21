@@ -431,6 +431,7 @@ footer a {
 #public-chat {
   max-height: 500px;
   display: flex;
+  flex-direction: column;
   align-self: flex-end;
 }
 

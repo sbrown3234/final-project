@@ -20,8 +20,6 @@ class Chat extends React.Component {
       return <div>Loading...</div>
     }
 
-    console.log('propping: ', this.props)
-
 
     const { chatMessages, handleChange, onKeyPressed, sendMessage } = this.props
 

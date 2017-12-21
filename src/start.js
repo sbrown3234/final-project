@@ -7,6 +7,7 @@ import Login from "./landing/login";
 import About from './landing/about';
 import Profile from "./profiles/profile";
 import OP from "./profiles/op";
+import Chat from "./messages/chat";
 import PrivateChat from "./messages/privateChat";
 import Collage from './collage/collage';
 import App from "./app";
@@ -39,6 +40,7 @@ const loggedInRouter = (
         <Route path="/about" component={About}/>
         <Route path="/user/profile/:id" component={OP} />
         <Route path="/online" component={Online} />
+        <Route path="/public-chatroom" component={Chat} />
         <Route path="/collage" component={Collage} />
         <Route path="/messages/:id" component={PrivateChat} />
         <IndexRoute component={Profile} />

@@ -37,8 +37,6 @@ class Search extends React.Component {
         </ul>
     )
 
-    console.log('props: ', this.props)
-
 
 
     return (

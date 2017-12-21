@@ -17,7 +17,6 @@ export default class Profile extends React.Component {
       return <div>Loading...</div>
     }
 
-    console.log('props: ', this.props)
 
 
     const { firstname, lastname, bio,  profile_pic, cover_photo, toggleUpload, showUploader, toggleBio, showBio, handleChange, handlePic, upload, update } = this.props;
