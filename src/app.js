@@ -27,11 +27,9 @@ export default class App extends React.Component {
   }
 
   handlePic(e) {
-    toggleUpload();
     this.setState({
       [e.target.name]: e.target.files[0]
     })
-    upload();
   }
 
   handleChange(e) {
@@ -54,7 +52,6 @@ export default class App extends React.Component {
   }
 
   toggleBio() {
-    console.log('hallo')
     this.setState({
       showBio : !this.state.showBio
     })
@@ -83,12 +80,14 @@ export default class App extends React.Component {
     e.preventDefault();
   }
 
-  upload() {
+  upload(e) {
+    this.toggleUpload();
     const { file, coverPhoto } = this.state;
+    console.log('running profile pic upload')
+
     if (!!file) {
       let formData = new FormData();
       formData.append("file", file);
-
 
       axios.post('/uploadImage', formData).then((results) => {
 
@@ -163,6 +162,7 @@ export default class App extends React.Component {
       toggleUpload : this.toggleUpload,
       toggleBio : this.toggleBio,
       update: this.update,
+      upload: this.upload,
       handleChange : this.handleChange,
       handlePic: this.handlePic
     });

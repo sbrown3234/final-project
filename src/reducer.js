@@ -108,6 +108,6 @@ export default function(state = defaultState, action) {
       });
     }
   }
-console.log('state bitches: ', state)
+  
 return state;
 }

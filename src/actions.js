@@ -56,6 +56,7 @@ export function onlineUsers(data) {
 }
 
 export function chatMessage({message}) {
+  console.log('pic: ', message)
   return {
     type: "NEW_MESSAGE",
     message: message

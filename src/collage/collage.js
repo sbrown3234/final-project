@@ -1,12 +1,20 @@
 import React from 'react';
 import $ from 'jquery';
+import Chat from '../messages/chat';
 
 export default class Collage extends React.Component {
   constructor(props) {
     super(props)
-
+    this.state = {
+      showChat: false,
+    };
     this.handleCopy = this.handleCopy.bind(this);
     this.handlePaste = this.handlePaste.bind(this);
+    this.toggleChat = this.toggleChat.bind(this);
+  }
+
+  componentShouldUpdate() {
+    return false
   }
 
   componentDidMount() {
@@ -65,8 +73,12 @@ export default class Collage extends React.Component {
     });
 
     canvas.add(group);
+  }
 
-    console.log('canvas: ', canvas)
+  toggleChat(){
+    this.setState({
+      showChat: !this.state.showChat
+    })
   }
 
 
@@ -102,6 +114,11 @@ export default class Collage extends React.Component {
     });
   }
   render() {
+
+    const { showChat } = this.state
+    const { chatMessages, handleChange, sendMessage } = this.props
+
+    console.log("props: ", this.props)
 
     const styleCanv1 = {
       border: '1px solid rgb(204, 204, 204)',
@@ -152,6 +169,12 @@ export default class Collage extends React.Component {
             <span>Polaroid: </span>
             <input id="polaroid" type="checkbox" />
           </p>
+
+        <button onClick={this.handleImage}>Upload an Image</button>
+        </div>
+        <div id="public-chat">
+        <h1 onClick={this.toggleChat}>Public Chatroom</h1>
+          {showChat && <Chat chatMessages={chatMessages} handleChange={handleChange} sendMessage={sendMessage} />}
         </div>
       </div>
     )

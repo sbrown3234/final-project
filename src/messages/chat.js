@@ -41,7 +41,6 @@ class Chat extends React.Component {
 
     return (
       <div id="chatroom">
-        <h1>Public Chatroom</h1>
         <div className="chat-box">
         <div className="message-window" ref={elem => this.elem = elem}>
             <div className="chat-messages">

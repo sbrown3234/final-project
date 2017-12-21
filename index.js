@@ -107,8 +107,18 @@
     dbModule.getMessages().then((results) => {
       if (results.length > 10) {
         const newResults = results.slice(-10)
+        newResults.forEach((result) => {
+          if (!result.profile_pic) {
+            result.profile_pic = "https://api.adorable.io/avatars/200/abott@adorable.png"
+          }
+        })
         io.sockets.sockets[socketId].emit('chatMessages', {messages: newResults})
       } else {
+        results.forEach((result) => {
+          if (!result.profile_pic) {
+            result.profile_pic = "https://api.adorable.io/avatars/200/abott@adorable.png"
+          }
+        })
         io.sockets.sockets[socketId].emit('chatMessages', {messages: results})
       }
     }).catch((err) => {
@@ -117,12 +127,17 @@
 
 
     socket.on('newMessage', ({message, user}) => {
+      console.log("in new message")
       userId = user;
 
         dbModule.chatMessage(userId, message).then( () => {
           dbModule.userMessage(userId).then((results) => {
-            console.log('fuck this shit: ', results)
-          io.sockets.emit('chatMessage', {message: results})
+            if (results.profile_pic = false) {
+              results.profile_pic = "https://api.adorable.io/avatars/200/abott@adorable.png"
+              io.sockets.emit('chatMessage', {message: results})
+            } else {
+              io.sockets.emit('chatMessage', {message: results})
+            }
         })
       }).catch((err) => {
         console.log('chatMessage post err: ', err)
@@ -142,8 +157,10 @@
 
       dbModule.directMessage(userId, otherId, message).then( () => {
         dbModule.userDMessage(userId, otherId).then((results) => {
-          console.log('fuck this shit: ', results)
-          console.log('sockets: ', socketId)
+          if (!results.profile_pic) {
+            results.profile_pic = "https://api.adorable.io/avatars/200/abott@adorable.png"
+          }
+          console.log('res: ', results.profile_pic)
         io.sockets.sockets[socketId].emit('directMessage', {message: results})
       })
     }).catch((err) => {

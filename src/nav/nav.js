@@ -7,7 +7,7 @@ export default function Nav (props) {
       <div id="nav-bar">
         <div className="links">
           <Link to="/messages">Private Messages</Link>
-          <Link to='/public-chatroom'>Chatroom</Link>
+          <Link to='/collage'>Collage</Link>
           <Link to='/logout'>Logout</Link>
         </div>
         <img id="nav-pic" src={profile_pic} />
