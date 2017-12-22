@@ -107,18 +107,8 @@
     dbModule.getMessages().then((results) => {
       if (results.length > 10) {
         const newResults = results.slice(-10)
-        newResults.forEach((result) => {
-          if (!result.profile_pic) {
-            result.profile_pic = "https://api.adorable.io/avatars/200/abott@adorable.png"
-          }
-        })
         io.sockets.sockets[socketId].emit('chatMessages', {messages: newResults})
       } else {
-        results.forEach((result) => {
-          if (!result.profile_pic) {
-            result.profile_pic = "https://api.adorable.io/avatars/200/abott@adorable.png"
-          }
-        })
         io.sockets.sockets[socketId].emit('chatMessages', {messages: results})
       }
     }).catch((err) => {
@@ -132,12 +122,7 @@
 
         dbModule.chatMessage(userId, message).then( () => {
           dbModule.userMessage(userId).then((results) => {
-            if (results.profile_pic = false) {
-              results.profile_pic = "https://api.adorable.io/avatars/200/abott@adorable.png"
               io.sockets.emit('chatMessage', {message: results})
-            } else {
-              io.sockets.emit('chatMessage', {message: results})
-            }
         })
       }).catch((err) => {
         console.log('chatMessage post err: ', err)
@@ -157,9 +142,6 @@
 
       dbModule.directMessage(userId, otherId, message).then( () => {
         dbModule.userDMessage(userId, otherId).then((results) => {
-          if (!results.profile_pic) {
-            results.profile_pic = "https://api.adorable.io/avatars/200/abott@adorable.png"
-          }
           console.log('res: ', results.profile_pic)
         io.sockets.sockets[socketId].emit('directMessage', {message: results})
       })
@@ -217,11 +199,6 @@
     })
 
     dbModule.getOnlineUserFriendsByIds(userId, ids).then((results) => {
-      results.forEach((result) => {
-        if (!result.profile_pic) {
-          result.profile_pic = "https://api.adorable.io/avatars/200/abott@adorable.png"
-        }
-      })
       io.sockets.sockets[socketId].emit('onlineUsers', {data: results})
     }).catch((err) => {
       console.log('getUsersByIds db err: ', err)
@@ -288,10 +265,6 @@
     } else {
       dbModule.userInfo(id).then((results) => {
         console.log('results getUser: ', results)
-        if (!results.profile_pic) {
-          results.profile_pic = "https://api.adorable.io/avatars/200/abott@adorable.png"
-        }
-
         if (!results.cover_photo) {
           results.cover_photo = "http://panoramastudio-international.com/wp-content/uploads/2014/02/placeholder_image1.png"
         }
@@ -308,11 +281,6 @@
 
 app.get('/all-users', (req, res) => {
   dbModule.getAllUsers().then((results) => {
-    results.forEach((result) => {
-      if (!result.profile_pic) {
-        result.profile_pic = "https://api.adorable.io/avatars/200/abott@adorable.png"
-      }
-    })
     res.json({data: results})
   }).catch((err) => {
     console.log('all users err: ', err)
@@ -366,15 +334,38 @@ app.post('/uploadCanvasImage', uploader.single('file'), (req, res) => {
   })
 })
 
+app.post('/saveCanvas', (req, res) => {
+    let userId = req.session.user.id
+    let canvas = req.body.data
+
+    dbModule.insertCanv(canvas, userId).then(() => {
+      console.log('in success')
+      res.json({success: true})
+    }).catch((err) => {
+      console.log('insertCavn error: ', err)
+    })
+});
+
+app.post('/submitCanvas', (req, res) => {
+    let userId = req.session.user.id
+    let canvas = req.body.data
+
+    dbModule.submitCanvas(canvas, userId).then(() => {
+      console.log('in success')
+      res.json({success: true})
+    }).catch((err) => {
+      console.log('saveImg error: ', err)
+    })
+});
+
+app.get('/canvasImages', (req,res) => {
+  let userId = req.session.user.id
+  dbModule.getAllCanv(userId)
+})
+
 
 app.get('/userInfo', (req, res) => {
-
-
   dbModule.userInfo(req.session.user.id).then((results) => {
-    if (!results.profile_pic){
-      results.profile_pic = "https://api.adorable.io/avatars/200/abott@adorable.png"
-    }
-
      if (!results.cover_photo) {
       results.cover_photo = "http://panoramastudio-international.com/wp-content/uploads/2014/02/placeholder_image1.png"
     }
@@ -410,11 +401,13 @@ app.post('/login', (req, res) => {
 
 app.post('/register', (req, res) => {
 
-  if(!req.body.email || !req.body.email || !req.body.firstname || !req.body.lastname) {
+  if(!req.body.email || !req.body.password || !req.body.firstname || !req.body.lastname) {
     res.json({success: false})
   }
 
-  dbModule.newUser(req.body).then((id) => {
+  let profilePic = "https://api.adorable.io/avatars/200/abott@adorable.png"
+
+  dbModule.newUser(req.body, profilePic).then((id) => {
     dbModule.hashPassword(req.body.password, id)
     req.session.user = {
       id: id,

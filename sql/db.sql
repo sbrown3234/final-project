@@ -41,6 +41,14 @@ CREATE TABLE images (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE collage (
+  image_id serial primary key,
+  user_id integer,
+  collage text,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
 CREATE TABLE comments (
   commenter_id integer,
   image_id integer,

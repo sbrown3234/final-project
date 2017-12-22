@@ -3,9 +3,9 @@
   var db = spicedPg('postgres:postgres:postgres@localhost:5432/snetwork');
   var bcrypt = require('bcryptjs');
 
-  exports.newUser = (data) => {
-    const params = [data.firstname, data.lastname, data.email];
-    const q = `INSERT INTO users (firstname, lastname, email) VALUES ($1, $2, $3) RETURNING id;`;
+  exports.newUser = (data, profile) => {
+    const q = `INSERT INTO users (firstname, lastname, email, profile_pic) VALUES ($1, $2, $3, $4) RETURNING id;`;
+    const params = [data.firstname, data.lastname, data.email, profile];
     return db.query(q, params).then((results) => {
       return results.rows[0].id;
     }).catch((err) =>
@@ -187,7 +187,7 @@
     ON status = 1
     AND (
       (recipient_id = users.id AND sender_id = ANY($2))
-    OR
+      OR
       (sender_id = users.id AND recipient_id = $1)
     )
     WHERE users.id = ANY($2)`
@@ -334,6 +334,30 @@
     const params = [socketId];
     return db.query(q,params).then((results) => {
       return results.rows[0]
+    })
+  }
+
+  exports.insertCanv = (data, id) => {
+    const q = `INSERT INTO collage (collage, user_id) VALUES ($1, $2);`
+    const params = [data, id];
+    return db.query(q, params).then((results) => {
+      return results.rows[0];
+    }).catch((err)=> {
+      console.log('insertCanv db err: ', err)
+    })
+  };
+
+  exports.getAllCanv = (id) => {
+    const q = `SELECT users.id, firstname, lastname, profile_pic, collage, image_id, collage.created_at
+    FROM collage
+    LEFT JOIN users
+    ON users.id = user_id
+    WHERE (users.id = $1);`
+    const params = [id]
+    return db.query(q, params).then((results) => {
+      return results.rows
+    }).catch((err) => {
+      console.log('getAllCanv db err: ', err)
     })
   }
 

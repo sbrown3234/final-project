@@ -21,6 +21,8 @@ export default class Collage extends React.Component {
     this.handleFilter = this.handleFilter.bind(this);
     this.applyImageFilter = this.applyImageFilter.bind(this);
     this.applyFilterValue = this.applyFilterValue.bind(this);
+    this.saveCanvas = this.saveCanvas.bind(this);
+    this.submitCanvas = this.submitCanvas.bind(this);
   }
 
 
@@ -90,177 +92,222 @@ export default class Collage extends React.Component {
 
   }
 
-  applyImageFilter(index, filterName) {
-    const { canvas } = this.state;
-    var obj = canvas.getActiveObject();
-    obj.filters[index] = filterName;
-    obj.applyFilters();
-    canvas.renderAll();
-  }
-
-  handleFilter(e) {
-    let f = fabric.Image.filters;
-    const { filters } = this.state
-    const index = filters.indexOf(e.target.id);
-
-    if (index == 0) {
-      console.log('in apply image: ', f)
-      this.applyImageFilter(index, e.target.id && new f.Invert())
-    } else if (index == 1) {
-      this.applyImageFilter(index, e.target.id && new f.Sepia())
-    } else if (index == 2) {
-      console.log('in handleFilter')
-      this.applyImageFilter(index, e.target.id && new f.Brightness({
-        brightness: parseFloat($('#brightness-value').value)
-      }));
-    } else if (index == 3) {
-      console.log('in handleFilter')
-      this.applyImageFilter(index, e.target.id && new f.Contrast({
-        contrast: parseFloat($('#contrast-value').value)
-      }));
-    } else if (index == 4) {
-      console.log('in handleFilter')
-      this.applyImageFilter(index, e.target.id && new f.Saturation({
-        saturation: parseFloat($('#saturation-value').value)
-      }));
-    } else if (index == 5) {
-      var v1 = parseFloat($('gamma-red').value);
-      var v2 = parseFloat($('gamma-green').value);
-      var v3 = parseFloat($('gamma-blue').value);
-      console.log('in handleFilter')
-      this.applyImageFilter(index, e.target.id && new f.Gamma({
-        gamma: [v1, v2, v3]
-      }));
-    } else {
-      console.log('something went wrong', index, filters, f);
-    }
-  }
-
-  applyFilterValue(index, prop, value) {
+  saveCanvas(e) {
+    e.preventDefault()
     const { canvas } = this.state
-    var obj = canvas.getActiveObject();
-    obj.filters[index][prop] = value;
-    obj.applyFilters();
-    canvas.renderAll();
-  }
 
-  filterValue(e) {
-    const { filters } = this.state
-    const index = filters.indexOf(e.target.name);
-    if (index == 2) {
-      console.log('index: ', e.target.value)
-      this.applyFilterValue(2, e.target.name, e.target.value);
-    } else if (index == 3) {
-      console.log('index: ', e.target.value)
-      this.applyFilterValue(2, e.target.name, e.target.value);
-    } else if (index == 4) {
-      console.log('index: ', e.target.value)
-      this.applyFilterValue(2, e.target.name, e.target.value);
-    } else if (index == 5) {
-      if (e.target.id == 'gamma-red') {
-        var current = index.gamma
-        current[0] = parseFloat(e.target.value)
-        applyFilterValue(5, e.target.name, e.target.value)
-      } else if (e.target.id == 'gamma-blue') {
-        var current = index.gamma
-        current[1] = parseFloat(e.target.value)
-        applyFilterValue(5, e.target.name, e.target.value)
-      } else if (e.target.id == 'gamma-green') {
-        var current = index.gamma
-        current[2] = parseFloat(e.target.value)
-        applyFilterValue(5, e.target.name, e.target.value)
+    let canvObjects = [];
+
+    canvas._objects.forEach(object=> canvObjects.push(object))
+
+    let transfer = {
+      data: canvObjects
+    }
+
+    axios.post('/saveCanvas', transfer).then((results) => {
+      if(results.data.success) {
+        console.log('success')
       }
-      console.log('index: ', e.target.value)
-      this.applyFilterValue(2, e.target.name, e.target.value);
-    }
+    }).catch((err) => {
+      console.log('err in collage:', err)
+    })
   }
 
+  submitCanvas(e) {
+    e.preventDefault()
+    const { canvas } = this.state
+    var imgData = new FormData();
+    imgData.append('canvas', canvas._objects)
 
-  render() {
+    console.log
 
-    const { showChat, clipboard } = this.state
-    const { chatMessages, handleChange, sendMessage } = this.props
-
-    const styleCanv1 = {
-      border: '1px solid rgb(204, 204, 204)',
-      position: 'relative',
-      width: '500px',
-      height: '500px',
-      left: '15px',
-      touchAction: 'none',
-      cursor: 'default'
+    axios.post('/submitCanvas', imgData).then((results) => {
+      if(results.data.success) {
+        console.log('success')
+      }
+    }).catch((err) => {
+        console.log('err in collage:', err)
+      })
     }
 
-    return (
-      <div id="collage-container">
-        <canvas width="500" height="500" ref="canvasEl" style={styleCanv1} className="lower-canvas"></canvas>
-        <div className="controls">
-          <br/>
-          <h3>Handle Images:</h3>
-          <button onClick={this.handleCopy}>Copy Selected Object</button>
-          <button onClick={() => this.handlePaste()}>Paste Selected Object</button>
-          <button onClick={this.removeItem}>Remove Selected Object</button>
-          <h3>Filters: </h3>
-          <p>
-            <span>Invert: </span>
-            <input onChange={(e)=> this.handleFilter(e)} id="invert" type="checkbox" />
-          </p>
-          <p>
-            <span>Sepia: </span>
-            <input onChange={(e)=> this.handleFilter(e)} id="sepia" type="checkbox" />
-          </p>
-          <p>
-            <span>Gamma:</span>
-            <input id="gamma" type="checkbox" />
-            <label>
-              Red:
-              <input onChange={(e)=> this.filterValue(e)} id="gamma-red" name="gamma" value="1" min="0.2" max="2.2" step="0.003921" type="range" />
-            </label>
-            <br />
-            <label>
-              Green:
-              <input onChange={(e)=> this.filterValue(e)} id="gamma-green" name="gamma" value="1" min="0.2" max="2.2" step="0.003921" type="range" />
-            </label>
-            <br />
-            <label>
-              Blue:
-              <input onChange={(e)=> this.filterValue(e)} id="gamma-blue" name="gamma" value="1" min="0.2" max="2.2" step="0.003921" type="range" />
-            </label>
-            <br />
-          </p>
-          <p>
-            <span>Brightness:</span>
-            <input onChange={(e)=> this.handleFilter(e)} id="brightness" type="checkbox" />
-            <label>
-              Value:
-              <input onChange={(e)=> this.filterValue(e)} id="brightness-value" name="brightness" value="1" min="0.2" max="2.2" step="0.003921" type="range" />
-            </label>
-          </p>
-          <p>
-            <span>Contrast:</span>
-            <input id="contrast" type="checkbox" />
-            <label>
-              Value:
-              <input onChange={(e)=> this.filterValue(e)} id="contrast-value" name="contrast" value="1" min="0.2" max="2.2" step="0.003921" type="range" />
-            </label>
-          </p>
-          <p>
-            <span>Saturation:</span>
-            <input id="saturation" type="checkbox" />
-            <label>
-              Value:
-              <input id="saturation-value" name="saturation" value="1" min="0.2" max="2.2" step="0.003921" type="range" />
-            </label>
-          </p>
+    applyImageFilter(index, filterName) {
+      const { canvas } = this.state;
+      var obj = canvas.getActiveObject();
+      obj.filters[index] = filterName;
+      obj.applyFilters();
+      canvas.renderAll();
+    }
 
-          <input onChange={(e) => this.handleImg(e)} type="file" name="file" />
-          <div id="public-chat">
-            <h1 onClick={()=> this.toggleChat()}>Need Help?</h1>
-            {!!showChat && <Chat chatMessages={chatMessages} handleChange={handleChange} sendMessage={sendMessage} />}
+    handleFilter(e) {
+      let f = fabric.Image.filters;
+      const { filters } = this.state
+      const index = filters.indexOf(e.target.id);
+
+      if (index == 0) {
+        console.log('in apply image: ', f)
+        this.applyImageFilter(index, e.target.id && new f.Invert())
+      } else if (index == 1) {
+        this.applyImageFilter(index, e.target.id && new f.Sepia())
+      } else if (index == 2) {
+        console.log('in handleFilter')
+        this.applyImageFilter(index, e.target.id && new f.Brightness({
+          brightness: parseFloat($('#brightness-value').value)
+        }));
+      } else if (index == 3) {
+        console.log('in handleFilter')
+        this.applyImageFilter(index, e.target.id && new f.Contrast({
+          contrast: parseFloat($('#contrast-value').value)
+        }));
+      } else if (index == 4) {
+        console.log('in handleFilter')
+        this.applyImageFilter(index, e.target.id && new f.Saturation({
+          saturation: parseFloat($('#saturation-value').value)
+        }));
+      } else if (index == 5) {
+        var v1 = parseFloat($('gamma-red').value);
+        var v2 = parseFloat($('gamma-green').value);
+        var v3 = parseFloat($('gamma-blue').value);
+        console.log('in handleFilter')
+        this.applyImageFilter(index, e.target.id && new f.Gamma({
+          gamma: [v1, v2, v3]
+        }));
+      } else {
+        console.log('something went wrong', index, filters, f);
+      }
+    }
+
+    applyFilterValue(index, prop, value) {
+      const { canvas } = this.state
+      var obj = canvas.getActiveObject();
+      obj.filters[index][prop] = value;
+      obj.applyFilters();
+      canvas.renderAll();
+    }
+
+    filterValue(e) {
+      const { filters } = this.state
+      const index = filters.indexOf(e.target.name);
+      if (index == 2) {
+        console.log('index: ', e.target.value)
+        this.applyFilterValue(2, e.target.name, e.target.value);
+      } else if (index == 3) {
+        console.log('index: ', e.target.value)
+        this.applyFilterValue(2, e.target.name, e.target.value);
+      } else if (index == 4) {
+        console.log('index: ', e.target.value)
+        this.applyFilterValue(2, e.target.name, e.target.value);
+      } else if (index == 5) {
+        if (e.target.id == 'gamma-red') {
+          var current = index.gamma
+          current[0] = parseFloat(e.target.value)
+          applyFilterValue(5, e.target.name, e.target.value)
+        } else if (e.target.id == 'gamma-blue') {
+          var current = index.gamma
+          current[1] = parseFloat(e.target.value)
+          applyFilterValue(5, e.target.name, e.target.value)
+        } else if (e.target.id == 'gamma-green') {
+          var current = index.gamma
+          current[2] = parseFloat(e.target.value)
+          applyFilterValue(5, e.target.name, e.target.value)
+        }
+        console.log('index: ', e.target.value)
+        this.applyFilterValue(2, e.target.name, e.target.value);
+      }
+    }
+
+
+    render() {
+
+      const { showChat, clipboard } = this.state
+      const { chatMessages, handleChange, sendMessage } = this.props
+
+      const styleCanv1 = {
+        border: '1px solid rgb(204, 204, 204)',
+        position: 'absolute',
+        width: '500px',
+        height: '500px',
+        left: '15px',
+        touchAction: 'none',
+        cursor: 'default'
+      }
+
+      return (
+        <div id="can">
+        <div id="collage-container">
+          <div id="canvas-container">
+          <canvas width="800" height="600" ref="canvasEl" style={styleCanv1} className="lower-canvas"></canvas>
+          <div id="save">
+            <button className="save-button" type="submit" onClick={(e)=> this.saveCanvas(e)}>Save Image!</button>
+            <button className="save-button" type="submit" onClick={(e)=> this.submitCanvas(e)}>Submit Image!</button>
           </div>
+        </div>
+          <div className="controls">
+            <br/>
+            <h3>Handle Images:</h3>
+            <button onClick={this.handleCopy}>Copy Selected Object</button>
+            <button onClick={() => this.handlePaste()}>Paste Selected Object</button>
+            <button onClick={this.removeItem}>Remove Selected Object</button>
+            <h3>Filters: </h3>
+            <p>
+              <span>Invert: </span>
+              <input onChange={(e)=> this.handleFilter(e)} id="invert" type="checkbox" />
+            </p>
+            <p>
+              <span>Sepia: </span>
+              <input onChange={(e)=> this.handleFilter(e)} id="sepia" type="checkbox" />
+            </p>
+            <p>
+              <span>Gamma:</span>
+              <input id="gamma" type="checkbox" />
+              <label>
+                Red:
+                <input onChange={(e)=> this.filterValue(e)} id="gamma-red" name="gamma" value="1" min="0.2" max="2.2" step="0.003921" type="range" />
+              </label>
+              <br />
+              <label>
+                Green:
+                <input onChange={(e)=> this.filterValue(e)} id="gamma-green" name="gamma" value="1" min="0.2" max="2.2" step="0.003921" type="range" />
+              </label>
+              <br />
+              <label>
+                Blue:
+                <input onChange={(e)=> this.filterValue(e)} id="gamma-blue" name="gamma" value="1" min="0.2" max="2.2" step="0.003921" type="range" />
+              </label>
+              <br />
+            </p>
+            <p>
+              <span>Brightness:</span>
+              <input onChange={(e)=> this.handleFilter(e)} id="brightness" type="checkbox" />
+              <label>
+                Value:
+                <input onChange={(e)=> this.filterValue(e)} id="brightness-value" name="brightness" value="1" min="0.2" max="2.2" step="0.003921" type="range" />
+              </label>
+            </p>
+            <p>
+              <span>Contrast:</span>
+              <input id="contrast" type="checkbox" />
+              <label>
+                Value:
+                <input onChange={(e)=> this.filterValue(e)} id="contrast-value" name="contrast" value="1" min="0.2" max="2.2" step="0.003921" type="range" />
+              </label>
+            </p>
+            <p>
+              <span>Saturation:</span>
+              <input id="saturation" type="checkbox" />
+              <label>
+                Value:
+                <input id="saturation-value" name="saturation" value="1" min="0.2" max="2.2" step="0.003921" type="range" />
+              </label>
+            </p>
 
+            <input onChange={(e) => this.handleImg(e)} type="file" name="file" />
+            <div id="public-chat">
+              <h1 onClick={()=> this.toggleChat()}>Need Help?</h1>
+              {!!showChat && <Chat chatMessages={chatMessages} handleChange={handleChange} sendMessage={sendMessage} />}
+            </div>
+          </div>
         </div>
       </div>
-    )
+      )
+    }
   }
-}
