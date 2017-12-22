@@ -38,7 +38,6 @@ CREATE TABLE images (
   image_id serial primary key,
   user_id integer,
   image_url text,
-  title varchar(255),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

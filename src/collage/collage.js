@@ -8,7 +8,8 @@ export default class Collage extends React.Component {
     super(props)
     this.state = {
       showChat: false,
-      clipboard: null
+      clipboard: null,
+      filters: ['invert', 'sepia', 'brownie','brightness', 'contrast', 'saturation', 'vintage','technicolor', 'polaroid', 'gamma', 'brightness', 'kodachrome', 'blackwhite']
     };
     this.handleCopy = this.handleCopy.bind(this);
     this.handlePaste = this.handlePaste.bind(this);
@@ -16,6 +17,8 @@ export default class Collage extends React.Component {
     this.handleImg = this.handleImg.bind(this);
     this.uploadImg = this.uploadImg.bind(this);
     this.removeItem = this.removeItem.bind(this);
+    this.handleFigure = this.handleFigure.bind(this);
+    this.applyImageFilter = this.applyImageFilter.bind(this);
   }
 
 
@@ -24,21 +27,6 @@ export default class Collage extends React.Component {
     console.log('in comp mount')
     var canvas = new fabric.Canvas(this.refs.canvasEl);
 
-    var rect = new fabric.Rect({
-      left: 100,
-      top: 50,
-      fill: '#D81B60',
-      width: 100,
-      height: 100,
-      strokeWidth: 2,
-      stroke: "#880E4F",
-      rx: 10,
-      ry: 10,
-      angle: 45,
-      hasControls: true
-    });
-
-    canvas.add(rect);
 
     this.setState({
       canvas: canvas
@@ -46,11 +34,8 @@ export default class Collage extends React.Component {
   }
 
   toggleChat(){
-    console.log("running toggle")
     this.setState({
       showChat: !this.state.showChat
-    }, () => {
-      console.log('state: ', this.state)
     })
   }
 
@@ -59,7 +44,6 @@ export default class Collage extends React.Component {
     this.setState({
       file : e.target.files[0]
     }, () => {
-      e.preventDefault()
       this.uploadImg()
     })
   }
@@ -91,19 +75,41 @@ export default class Collage extends React.Component {
     var imgData = new FormData();
     imgData.append('file', file)
 
-    console.log('form: ', imgData)
 
     axios.post('/uploadCanvasImage', imgData).then((results) => {
-      console.log("fffs")
       if(results.data.success) {
         fabric.Image.fromURL(results.data.image, (oImg) => {
-            canvas.add(oImg)
+          canvas.add(oImg)
         })
       }
-  }).catch((err) => {
-    console.log('err in collage:', err)
-  })
+    }).catch((err) => {
+      console.log('err in collage:', err)
+    })
 
+  }
+
+  applyImageFilter(index, filterName) {
+    const { canvas } = this.state;
+     var obj = canvas.getActiveObject();
+     obj.filters[index] = filterName;
+     obj.applyFilters();
+     canvas.renderAll();
+  }
+
+  handleFigure(e) {
+    let f = fabric.Image.filters;
+    const { filters } = this.state
+    const index = filters.indexOf(e.target.id);
+
+    if (index == 0) {
+      console.log('in apply image: ', f)
+      this.applyImageFilter(index, e.target.id && new f.Invert())
+    }
+    else if (index == 1) {
+      this.applyImageFilter(index, e.target.id && new f.Sepia())
+    } else {
+      console.log('something went wrong', index, filters, f);
+    }
   }
 
 
@@ -134,39 +140,57 @@ export default class Collage extends React.Component {
           <h3>Filters: </h3>
           <p>
             <span>Invert: </span>
-            <input id="invert" type="checkbox" />
+            <input onChange={(e)=> this.handleFigure(e)} id="invert" type="checkbox" />
           </p>
           <p>
             <span>Sepia: </span>
-            <input id="sepia" type="checkbox" />
+            <input onChange={(e)=> this.handleFigure(e)} id="sepia" type="checkbox" />
           </p>
           <p>
-            <span>Black/White: </span>
-            <input id="black-white" type="checkbox" />
+            <span>Gamma:</span>
+            <input id="gamma" type="checkbox" />
+            <label>
+              Red:
+              <input id="gamma-red" value="1" min="0.2" max="2.2" step="0.003921" type="range" />
+            </label>
+            <br />
+            <label>
+              Green:
+              <input id="gamma-red" value="1" min="0.2" max="2.2" step="0.003921" type="range" />
+            </label>
+            <br />
+            <label>
+              Blue:
+              <input id="gamma-red" value="1" min="0.2" max="2.2" step="0.003921" type="range" />
+            </label>
+            <br />
           </p>
           <p>
-            <span>Brownie: </span>
-            <input id="brownie" type="checkbox" />
+            <span>Brightness:</span>
+            <input id="brightness" type="checkbox" />
+            <label>
+              Value:
+              <input id="brightness-value" value="1" min="0.2" max="2.2" step="0.003921" type="range" />
+            </label>
           </p>
           <p>
-            <span>Vintage: </span>
-            <input id="vintage" type="checkbox" />
+            <span>Contrast:</span>
+            <input id="contrast" type="checkbox" />
+            <label>
+              Value:
+              <input id="contrast-value" value="1" min="0.2" max="2.2" step="0.003921" type="range" />
+            </label>
           </p>
           <p>
-            <span>Kodachrome: </span>
-            <input id="kodachrome" type="checkbox" />
+            <span>Saturation:</span>
+            <input id="saturation" type="checkbox" />
+            <label>
+              Value:
+              <input id="saturation-value" value="1" min="0.2" max="2.2" step="0.003921" type="range" />
+            </label>
           </p>
-          <p>
-            <span>Technicolor: </span>
-            <input id="technicolor" type="checkbox" />
-          </p>
-          <p>
-            <span>Polaroid: </span>
-            <input id="polaroid" type="checkbox" />
-          </p>
-          <form>
+
           <input onChange={(e) => this.handleImg(e)} type="file" name="file" />
-          </form>
           <div id="public-chat">
             <h1 onClick={()=> this.toggleChat()}>Need Help?</h1>
             {!!showChat && <Chat chatMessages={chatMessages} handleChange={handleChange} sendMessage={sendMessage} />}

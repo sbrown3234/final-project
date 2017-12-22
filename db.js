@@ -88,6 +88,16 @@
     return db.query(q,params)
   }
 
+  exports.insertCanvas = (file, id) => {
+    const q = `INSERT INTO images (image_url, user_id) VALUES ($1, $2);`
+    const params = [file, id]
+    return db.query(q,params).then((results) => {
+      return results.rows[0];
+    }).catch((err)=> {
+      console.log('insertCanv db err: ', err)
+    })
+  }
+
   exports.updateBio = (bio, id) => {
     const q = `UPDATE users SET bio = $1 WHERE id = $2`;
     const params = [bio, id];
@@ -230,7 +240,7 @@
       console.log('userMessage pic err: ', err)
     })
   }
-  
+
   exports.directMessage = (userId, otherId, message) => {
     const q = `INSERT INTO chat (sender_id, recipient_id, message)
     VALUES ($1, $2, $3);`

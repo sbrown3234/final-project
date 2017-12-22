@@ -357,8 +357,8 @@ app.post('/uploadImage', uploader.single('file'), (req, res) => {
 })
 
 app.post('/uploadCanvasImage', uploader.single('file'), (req, res) => {
-  s3.upload(req.file).then(() => {
-    let image = config.s3Url + req.file.filename
+  return dbModule.insertCanvas(req.file.filename, req.session.user.id).then(() => {
+    let image = req.file.filename
       res.json({success: true, image})
   }).catch((err) => {
     console.log('uploadCanvasImg err: ', err);
