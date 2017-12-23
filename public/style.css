@@ -16,8 +16,7 @@ body {
   position: absolute;
   top: 30%;
   left: 35%;
-  width: 400px;
-  height: 250px;
+  width: 500px;
   text-align: center;
   background: rgba(255,255,255,0.7);
   border-radius: 40px;
@@ -25,7 +24,7 @@ body {
 
 #smashed p {
   padding-top: 15px;
-  font-size: 22px;
+  font-size: 30px;
 }
 
 #welcome-container{
@@ -89,7 +88,7 @@ p {
 
 h1 {
   font-family: 'Permanent Marker', cursive;
-  font-size: 38px;
+  font-size: 42px;
   color: red;
 }
 
@@ -117,8 +116,21 @@ input {
   height: 200px;
 }
 
-#homepage {
+.profile {
   background-color: rgba(231, 231, 231,0);
+}
+
+.pictures {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.cover-photo {
+  width: 100%;
+  z-index: 6;
 }
 
 .cover-photo img {
@@ -126,24 +138,19 @@ input {
   min-width: 100%;
   min-height: 500px;
   max-height: 600px;
-  padding-bottom: 65px;
 }
 
 .profile-image {
   position: absolute;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-self: center;
-  top: 65%;
-  left: 40%;
+  top: 60%;
   z-index: 1000;
 }
 
 .profile-image img{
   height: 250px;
   width: 300px;
-  z-index: 50;
   border: white 4px solid;
 }
 
@@ -153,15 +160,21 @@ input {
 }
 
 .request-button {
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-self: center;
-  top: 105%;
-  left: 47.5%;
-  z-index: 1000;
+  position: relative;
+  padding-top: 160px;
 }
+
+
+.canv-images {
+  display: flex;
+  overflow: scroll;
+}
+
+.canv-images img {
+  padding: 5px;
+  height: 400px;
+}
+
 
 #app {
   overflow: hidden;
@@ -193,7 +206,7 @@ footer {
 }
 
 footer p {
-  font-size: 16px;
+  font-size: 24px;
 }
 
 footer a {
@@ -260,7 +273,6 @@ footer a {
 }
 
 .albums {
-  height: 500px;
   width: 100%;
 }
 
@@ -307,6 +319,14 @@ footer a {
   width: 100%;
 }
 
+#chatroom {
+  height: 100vh;
+  width: 100%;
+  background-image: url('./images/secret.jpg');
+  background-repeat: repeat;
+  background-size: cover;
+}
+
 .chat-box {
   position: relative;
   top: 20%;
@@ -314,7 +334,6 @@ footer a {
   flex-direction: column;
   justify-content: center;
   align-self: center;
-  background-image: url('./images/secret.jpg');
   margin-bottom: 60px;
 }
 
@@ -402,10 +421,12 @@ footer a {
 #can {
   height: 100vh;
   width: 100%;
+  background-image: url('./images/ps-jan7-1873_lead.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 #collage-container {
-  background-image: url('./images/ps-jan7-1873_lead.jpg');
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -442,12 +463,19 @@ footer a {
 }
 
 #public-chat {
-  max-height: 500px;
   display: flex;
   flex-direction: column;
   align-self: flex-end;
+  overflow: scroll;
 }
 
+.user-images {
+  padding: 20px;
+}
+
+.user-images h1 {
+  text-align: center;
+}
 
 @media screen and (min-width: 760px) and (max-width: 1000px) {
   #profile-image {

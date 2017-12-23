@@ -44,7 +44,7 @@
 
   app.use(cookieParser());
   app.use(bodyParser.urlencoded({extended: false}));
-  app.use(bodyParser.json())
+  app.use(bodyParser.json({limit: 2097152}))
 
   app.use(cookieSession({
     name: 'session',
@@ -325,7 +325,7 @@ app.post('/uploadImage', uploader.single('file'), (req, res) => {
 })
 
 app.post('/uploadCanvasImage', uploader.single('file'), (req, res) => {
-  return dbModule.insertCanvas(req.file.filename, req.session.user.id).then(() => {
+  return dbModule.saveCanv(req.file.filename, req.session.user.id).then(() => {
     let image = req.file.filename
       res.json({success: true, image})
   }).catch((err) => {
@@ -338,8 +338,10 @@ app.post('/saveCanvas', (req, res) => {
     let userId = req.session.user.id
     let canvas = req.body.data
 
-    dbModule.insertCanv(canvas, userId).then(() => {
-      console.log('in success')
+    dbModule.saveCanv(canvas, userId).then(() => {
+      dbModule.getAllCanv(userId).then((results) => {
+        console.log('results: ', results)
+      })
       res.json({success: true})
     }).catch((err) => {
       console.log('insertCavn error: ', err)
@@ -350,7 +352,9 @@ app.post('/submitCanvas', (req, res) => {
     let userId = req.session.user.id
     let canvas = req.body.data
 
-    dbModule.submitCanvas(canvas, userId).then(() => {
+    console.log('in submit: ', canvas)
+
+    dbModule.submitCanvas(userId, canvas).then(() => {
       console.log('in success')
       res.json({success: true})
     }).catch((err) => {
@@ -373,6 +377,25 @@ app.get('/userInfo', (req, res) => {
       res.json(results)
     }).catch((err) => {
       console.log('userInfo err: ', err)
+    })
+  })
+
+  app.get('/their-images/:otherId', (req, res) => {
+    let otherId = req.params.otherId
+    dbModule.getAllCanv(otherId).then((results) => {
+      res.json({data: results})
+    }).catch((err)=> {
+      console.log("err in getAllCanv req:", err)
+    })
+  })
+
+  app.get('/images', (req, res) => {
+    let id = req.session.user.id
+
+    dbModule.getAllCanv(id).then((results) => {
+      res.json({data: results})
+    }).catch((err)=> {
+      console.log("err in getAllCanv req:", err)
     })
   })
 

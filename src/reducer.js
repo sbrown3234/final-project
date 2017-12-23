@@ -2,7 +2,9 @@ const defaultState = {
   dms: [],
   othersFriends: [],
   messages: [],
-  everyDM: []
+  everyDM: [],
+  images: [],
+  theirImages: []
 }
 
 export default function(state = defaultState, action) {
@@ -78,13 +80,6 @@ export default function(state = defaultState, action) {
     })
   }
 
-  if (action.type == 'GET_ALL_DM') {
-    console.log('running dm reducer')
-    state = Object.assign({}, state, {
-      everyDM: action.DMs
-    })
-  }
-
   if (action.type == 'DIRECT_MESSAGES') {
     state = Object.assign({}, state, {
       dms: action.DMs
@@ -94,6 +89,18 @@ export default function(state = defaultState, action) {
   if (action.type == 'DIRECT_MESSAGE') {
     state = Object.assign({}, state, {
       dms: [...state.dms, action.message[0]]
+    })
+  }
+
+  if (action.type == 'GET_IMAGES') {
+    state = Object.assign({}, state, {
+      images: action.images
+    })
+  }
+
+  if (action.type == 'GET_THEIR_IMAGES') {
+    state = Object.assign({}, state, {
+      theirImages: action.theirImages
     })
   }
 
@@ -108,6 +115,6 @@ export default function(state = defaultState, action) {
       });
     }
   }
-  
+
 return state;
 }

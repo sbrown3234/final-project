@@ -4,6 +4,7 @@ import Friends from "./friendsList";
 import Icon from './icon';
 import Pic from './pic'
 import CoverPhoto from './coverPhoto';
+import Images from './images';
 import { Link } from 'react-router';
 
 export default class Profile extends React.Component {
@@ -22,7 +23,17 @@ export default class Profile extends React.Component {
     const { firstname, lastname, bio,  profile_pic, cover_photo, toggleUpload, showUploader, toggleBio, showBio, handleChange, handlePic, upload, update } = this.props;
 
     return  (
-      <div id="homepage">
+      <div className="profile">
+        <div className="pictures">
+          <CoverPhoto
+            firstname = {firstname}
+            lastname = {lastname}
+            cover_photo = {cover_photo}
+            toggleUpload = {toggleUpload}
+            showUploader = {showUploader}
+            handlePic = {handlePic}
+            upload = {upload}
+          />
         <Pic
           profile_pic = {profile_pic}
           firstname = {firstname}
@@ -33,16 +44,7 @@ export default class Profile extends React.Component {
           handlePic = {handlePic}
           upload = {upload}
         />
-
-        <CoverPhoto
-          firstname = {firstname}
-          lastname = {lastname}
-          cover_photo = {cover_photo}
-          toggleUpload = {toggleUpload}
-          showUploader = {showUploader}
-          handlePic = {handlePic}
-          upload = {upload}
-        />
+      </div>
         <div className="bio-friends">
           <Body
             bio = {bio}
@@ -55,6 +57,7 @@ export default class Profile extends React.Component {
           <Friends />
         </div>
         <div className="albums">
+          <Images />
         </div>
 
 
@@ -62,13 +65,3 @@ export default class Profile extends React.Component {
     )
   }
 }
-
-
-
-/* <Photos
-
-toggleUpload = {toggleUpload}
-showUploader = {showUploader}
-handlePic = {handlePic}
-upload = {upload}
-/> */

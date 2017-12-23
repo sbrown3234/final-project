@@ -3,7 +3,8 @@ import axios from 'axios';
 import Pic from './pic';
 import CoverPhoto from './coverPhoto'
 import Button from './fbutton';
-import OtherFriends from './otherFriends'
+import OtherFriends from './otherFriends';
+import OtherImages from './otherImages'
 import { browserHistory } from 'react-router';
 
 export default class OP extends React.Component {
@@ -35,22 +36,22 @@ export default class OP extends React.Component {
 
 
     return (
-      <div id="profile">
+      <div className="profile">
 
         {error && <div>Sorry, I don't know her....</div>}
+        <div className="pictures">
+        <CoverPhoto
+          firstname = {firstname}
+          lastname = {lastname}
+          cover_photo = {cover_photo}
+        />
         <Pic
           profile_pic = {profile_pic}
           firstname = {firstname}
           lastname = {lastname}
         />
         <Button otherId={id}/>
-
-        <CoverPhoto
-          firstname = {firstname}
-          lastname = {lastname}
-          cover_photo = {cover_photo}
-        />
-
+      </div>
         <div className="bio-friends">
           <div className="bio">
             <h1>About {firstname}:</h1>
@@ -64,8 +65,8 @@ export default class OP extends React.Component {
           </div>
         </div>
         </div>
-
         <div className="albums">
+          <OtherImages otherId={id}/>
         </div>
 
       </div>

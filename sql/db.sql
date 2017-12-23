@@ -2,6 +2,7 @@ DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS friend_requests;
 DROP TABLE IF EXISTS chat;
 DROP TABLE IF EXISTS comments;
+DROP TABLE IF EXISTS collage;
 DROP TABLE IF EXISTS user_info;
 DROP TABLE IF EXISTS images;
 
@@ -42,7 +43,7 @@ CREATE TABLE images (
 );
 
 CREATE TABLE collage (
-  image_id serial primary key,
+  collage_id serial primary key,
   user_id integer,
   collage text,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

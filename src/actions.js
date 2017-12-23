@@ -70,16 +70,6 @@ export function chatMessages(messages) {
   }
 }
 
-export function getAllDMs() {
-  return axios.get('/get-all-dms').then(({data}) => {
-    console.log('in getAllDMs action: ', data.messages)
-    return {
-      type: "GET_ALL_DM",
-      messages: data.messages
-    }
-  })
-}
-
 export function getDMs(id) {
   return axios.get('/dm/'+id).then(({data})=> {
     console.log('in getDMS: ', data)
@@ -98,6 +88,26 @@ export function directMessage(message) {
     type: "DIRECT_MESSAGE",
     message: message
   }
+}
+
+export function getImages() {
+  return axios.get('/images').then(({data}) => {
+    console.log('in getImages action: ', data)
+    return {
+      type: "GET_IMAGES",
+      images: data
+    }
+  })
+}
+
+export function getTheirImages(otherId) {
+  return axios.get('/their-images/' + otherId).then(({data}) => {
+    console.log('in action: ', data)
+    return {
+      type: "GET_THEIR_IMAGES",
+      theirImages: data
+    }
+  })
 }
 
 export function userJoined(data) {

@@ -6,7 +6,7 @@ export default function Nav (props) {
     return(
       <div id="nav-bar">
         <div className="links">
-          <Link to="/messages">Private Messages</Link>
+          <Link to="/public-chatroom">s_MASHED Chat!</Link>
           <Link to='/collage'>Collage</Link>
           <Link to='/logout'>Logout</Link>
         </div>

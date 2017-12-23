@@ -337,7 +337,7 @@
     })
   }
 
-  exports.insertCanv = (data, id) => {
+  exports.saveCanv = (data, id) => {
     const q = `INSERT INTO collage (collage, user_id) VALUES ($1, $2);`
     const params = [data, id];
     return db.query(q, params).then((results) => {
@@ -347,12 +347,18 @@
     })
   };
 
+  exports.submitCanvas = (id, data) => {
+    const q = `INSERT INTO images (user_id, image_url) VALUES ($1, $2)`
+    const params = [id, data];
+    return db.query(q, params).then((results) => {
+      console.log('success: ', results)
+    }).catch((err)=> {
+      console.log('submitCanvas db err: ', err)
+    })
+  }
+
   exports.getAllCanv = (id) => {
-    const q = `SELECT users.id, firstname, lastname, profile_pic, collage, image_id, collage.created_at
-    FROM collage
-    LEFT JOIN users
-    ON users.id = user_id
-    WHERE (users.id = $1);`
+    const q = `SELECT * FROM images WHERE (user_id = $1);`
     const params = [id]
     return db.query(q, params).then((results) => {
       return results.rows

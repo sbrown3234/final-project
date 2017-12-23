@@ -5,18 +5,14 @@ import OtherUser from './otherUser';
 
 class OtherFriends extends React.Component {
   componentDidMount() {
-    if (!this.props.getTheirFriends) {
       this.props.getTheirFriends(this.props.otherId)
-    } else {
-      this.props.getTheirFriends(this.props.otherId)
-    }
   }
 
   render(){
     const { users } = this.props;
 
     if (!users) {
-      this.props.getTheirFriends(this.props.otherId)
+      return <div>Loading...</div>
     }
 
 

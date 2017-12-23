@@ -96,17 +96,16 @@ export default class Collage extends React.Component {
     e.preventDefault()
     const { canvas } = this.state
 
-    let canvObjects = [];
-
-    canvas._objects.forEach(object=> canvObjects.push(object))
+    var data = canvas.toDataURL()
 
     let transfer = {
-      data: canvObjects
+      data: data
     }
 
     axios.post('/saveCanvas', transfer).then((results) => {
       if(results.data.success) {
         console.log('success')
+
       }
     }).catch((err) => {
       console.log('err in collage:', err)
@@ -116,12 +115,15 @@ export default class Collage extends React.Component {
   submitCanvas(e) {
     e.preventDefault()
     const { canvas } = this.state
-    var imgData = new FormData();
-    imgData.append('canvas', canvas._objects)
 
-    console.log
+    var data = canvas.toDataURL()
+    console.log('data: ', data)
 
-    axios.post('/submitCanvas', imgData).then((results) => {
+    let transfer = {
+      data: data
+    }
+
+    axios.post('/submitCanvas', transfer).then((results) => {
       if(results.data.success) {
         console.log('success')
       }
@@ -153,26 +155,6 @@ export default class Collage extends React.Component {
         this.applyImageFilter(index, e.target.id && new f.Brightness({
           brightness: parseFloat($('#brightness-value').value)
         }));
-      } else if (index == 3) {
-        console.log('in handleFilter')
-        this.applyImageFilter(index, e.target.id && new f.Contrast({
-          contrast: parseFloat($('#contrast-value').value)
-        }));
-      } else if (index == 4) {
-        console.log('in handleFilter')
-        this.applyImageFilter(index, e.target.id && new f.Saturation({
-          saturation: parseFloat($('#saturation-value').value)
-        }));
-      } else if (index == 5) {
-        var v1 = parseFloat($('gamma-red').value);
-        var v2 = parseFloat($('gamma-green').value);
-        var v3 = parseFloat($('gamma-blue').value);
-        console.log('in handleFilter')
-        this.applyImageFilter(index, e.target.id && new f.Gamma({
-          gamma: [v1, v2, v3]
-        }));
-      } else {
-        console.log('something went wrong', index, filters, f);
       }
     }
 
@@ -188,28 +170,6 @@ export default class Collage extends React.Component {
       const { filters } = this.state
       const index = filters.indexOf(e.target.name);
       if (index == 2) {
-        console.log('index: ', e.target.value)
-        this.applyFilterValue(2, e.target.name, e.target.value);
-      } else if (index == 3) {
-        console.log('index: ', e.target.value)
-        this.applyFilterValue(2, e.target.name, e.target.value);
-      } else if (index == 4) {
-        console.log('index: ', e.target.value)
-        this.applyFilterValue(2, e.target.name, e.target.value);
-      } else if (index == 5) {
-        if (e.target.id == 'gamma-red') {
-          var current = index.gamma
-          current[0] = parseFloat(e.target.value)
-          applyFilterValue(5, e.target.name, e.target.value)
-        } else if (e.target.id == 'gamma-blue') {
-          var current = index.gamma
-          current[1] = parseFloat(e.target.value)
-          applyFilterValue(5, e.target.name, e.target.value)
-        } else if (e.target.id == 'gamma-green') {
-          var current = index.gamma
-          current[2] = parseFloat(e.target.value)
-          applyFilterValue(5, e.target.name, e.target.value)
-        }
         console.log('index: ', e.target.value)
         this.applyFilterValue(2, e.target.name, e.target.value);
       }
@@ -256,25 +216,7 @@ export default class Collage extends React.Component {
               <span>Sepia: </span>
               <input onChange={(e)=> this.handleFilter(e)} id="sepia" type="checkbox" />
             </p>
-            <p>
-              <span>Gamma:</span>
-              <input id="gamma" type="checkbox" />
-              <label>
-                Red:
-                <input onChange={(e)=> this.filterValue(e)} id="gamma-red" name="gamma" value="1" min="0.2" max="2.2" step="0.003921" type="range" />
-              </label>
-              <br />
-              <label>
-                Green:
-                <input onChange={(e)=> this.filterValue(e)} id="gamma-green" name="gamma" value="1" min="0.2" max="2.2" step="0.003921" type="range" />
-              </label>
-              <br />
-              <label>
-                Blue:
-                <input onChange={(e)=> this.filterValue(e)} id="gamma-blue" name="gamma" value="1" min="0.2" max="2.2" step="0.003921" type="range" />
-              </label>
-              <br />
-            </p>
+
             <p>
               <span>Brightness:</span>
               <input onChange={(e)=> this.handleFilter(e)} id="brightness" type="checkbox" />
@@ -283,22 +225,7 @@ export default class Collage extends React.Component {
                 <input onChange={(e)=> this.filterValue(e)} id="brightness-value" name="brightness" value="1" min="0.2" max="2.2" step="0.003921" type="range" />
               </label>
             </p>
-            <p>
-              <span>Contrast:</span>
-              <input id="contrast" type="checkbox" />
-              <label>
-                Value:
-                <input onChange={(e)=> this.filterValue(e)} id="contrast-value" name="contrast" value="1" min="0.2" max="2.2" step="0.003921" type="range" />
-              </label>
-            </p>
-            <p>
-              <span>Saturation:</span>
-              <input id="saturation" type="checkbox" />
-              <label>
-                Value:
-                <input id="saturation-value" name="saturation" value="1" min="0.2" max="2.2" step="0.003921" type="range" />
-              </label>
-            </p>
+
 
             <input onChange={(e) => this.handleImg(e)} type="file" name="file" />
             <div id="public-chat">
