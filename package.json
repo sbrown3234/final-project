@@ -5,11 +5,11 @@
   "main": "index.js",
   "scripts": {
     "build": "node build.js",
-    "start": "npm run build && node index.js",
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "engines": {
-    "node": "6.10.3"
+    "node": "9.3.0"
   },
   "dependencies": {
     "axios": "^0.15.3",
@@ -45,8 +45,7 @@
     "webpack": "^1.14.0",
     "webpack-dev-middleware": "^1.8.4"
   },
-  "keywords": [],
-  "author": "",
+  "author": "Stephen Brown",
   "license": "ISC",
   "devDependencies": {
     "eslint": "^4.12.0",
