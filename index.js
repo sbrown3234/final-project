@@ -21,9 +21,6 @@
   }
 
 
-
-  app.use(express.static(__dirname + '/uploads'));
-
   var diskStorage = multer.diskStorage({
     destination: (req, file, callback) => {
       callback(null, __dirname + '/uploads');
