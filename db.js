@@ -1,7 +1,16 @@
 (function(){
+
   var spicedPg = require('spiced-pg');
-  var db = spicedPg('postgres:postgres:postgres@localhost:5432/snetwork');
   var bcrypt = require('bcryptjs');
+
+
+var db;
+  if (process.env.DATABASE_URL) {
+    db = spicedPg(process.env.DATABASE_URL)
+  } else {
+    db = spicedPg('postgres:postgres:postgres@localhost:5432/snetwork')
+
+  }
 
   exports.newUser = (data, profile) => {
     const q = `INSERT INTO users (firstname, lastname, email, profile_pic) VALUES ($1, $2, $3, $4) RETURNING id;`;

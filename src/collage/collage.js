@@ -9,7 +9,7 @@ export default class Collage extends React.Component {
     this.state = {
       showChat: false,
       clipboard: null,
-      filters: ['invert', 'sepia','brightness', 'contrast', 'saturation', 'gamma', 'brightness']
+      filters: ['invert', 'sepia','brightness', 'contrast', 'saturation', 'gamma', 'brightness', 'hue-rotation']
     };
     this.handleCopy = this.handleCopy.bind(this);
     this.handlePaste = this.handlePaste.bind(this);
@@ -128,79 +128,79 @@ export default class Collage extends React.Component {
         console.log('success')
       }
     }).catch((err) => {
-        console.log('err in collage:', err)
-      })
+      console.log('err in collage:', err)
+    })
+  }
+
+  applyImageFilter(index, filterName) {
+    const { canvas } = this.state;
+    var obj = canvas.getActiveObject();
+    obj.filters[index] = filterName;
+    obj.applyFilters();
+    canvas.renderAll();
+  }
+
+  handleFilter(e) {
+    let f = fabric.Image.filters;
+    const { filters } = this.state
+    const index = filters.indexOf(e.target.id);
+
+    if (index == 0) {
+      console.log('in apply image: ', f)
+      this.applyImageFilter(index, e.target.id && new f.Invert())
+    } else if (index == 1) {
+      this.applyImageFilter(index, e.target.id && new f.Sepia())
+    } else if (index == 2) {
+      console.log('in handleFilter')
+      this.applyImageFilter(index, e.target.id && new f.Brightness({
+        brightness: parseFloat($('#brightness-value').value)
+      }));
+    }
+  }
+
+  applyFilterValue(index, prop, value) {
+    const { canvas } = this.state
+    var obj = canvas.getActiveObject();
+    obj.filters[index][prop] = value;
+    obj.applyFilters();
+    canvas.renderAll();
+  }
+
+  filterValue(e) {
+    const { filters } = this.state
+    const index = filters.indexOf(e.target.name);
+    if (index == 2) {
+      console.log('index: ', e.target.value)
+      this.applyFilterValue(2, e.target.name, e.target.value);
+    } else if (index == )
+  }
+
+
+  render() {
+
+    const { showChat, clipboard } = this.state
+    const { chatMessages, handleChange, sendMessage } = this.props
+
+    const styleCanv1 = {
+      border: '1px solid rgb(204, 204, 204)',
+      position: 'absolute',
+      width: '500px',
+      height: '500px',
+      left: '15px',
+      touchAction: 'none',
+      cursor: 'default'
     }
 
-    applyImageFilter(index, filterName) {
-      const { canvas } = this.state;
-      var obj = canvas.getActiveObject();
-      obj.filters[index] = filterName;
-      obj.applyFilters();
-      canvas.renderAll();
-    }
-
-    handleFilter(e) {
-      let f = fabric.Image.filters;
-      const { filters } = this.state
-      const index = filters.indexOf(e.target.id);
-
-      if (index == 0) {
-        console.log('in apply image: ', f)
-        this.applyImageFilter(index, e.target.id && new f.Invert())
-      } else if (index == 1) {
-        this.applyImageFilter(index, e.target.id && new f.Sepia())
-      } else if (index == 2) {
-        console.log('in handleFilter')
-        this.applyImageFilter(index, e.target.id && new f.Brightness({
-          brightness: parseFloat($('#brightness-value').value)
-        }));
-      }
-    }
-
-    applyFilterValue(index, prop, value) {
-      const { canvas } = this.state
-      var obj = canvas.getActiveObject();
-      obj.filters[index][prop] = value;
-      obj.applyFilters();
-      canvas.renderAll();
-    }
-
-    filterValue(e) {
-      const { filters } = this.state
-      const index = filters.indexOf(e.target.name);
-      if (index == 2) {
-        console.log('index: ', e.target.value)
-        this.applyFilterValue(2, e.target.name, e.target.value);
-      }
-    }
-
-
-    render() {
-
-      const { showChat, clipboard } = this.state
-      const { chatMessages, handleChange, sendMessage } = this.props
-
-      const styleCanv1 = {
-        border: '1px solid rgb(204, 204, 204)',
-        position: 'absolute',
-        width: '500px',
-        height: '500px',
-        left: '15px',
-        touchAction: 'none',
-        cursor: 'default'
-      }
-
-      return (
-        <div id="can">
+    return (
+      <div id="can">
         <div id="collage-container">
           <div id="canvas-container">
-          <canvas width="800" height="600" ref="canvasEl" style={styleCanv1} className="lower-canvas"></canvas>
-          <div id="save">
-            <button className="save-button" type="submit" onClick={(e)=> this.saveCanvas(e)}>Save Image!</button>
-            <button className="save-button" type="submit" onClick={(e)=> this.submitCanvas(e)}>Submit Image!</button>
+            <canvas width="800" height="600" ref="canvasEl" style={styleCanv1} className="lower-canvas"></canvas>
+            <div id="save">
+              <button className="save-button" type="submit" onClick={(e)=> this.saveCanvas(e)}>Save Image!</button>
+              <button className="save-button" type="submit" onClick={(e)=> this.submitCanvas(e)}>Submit Image!</button>
+            </div>
           </div>
-        </div>
           <div className="controls">
             <br/>
             <h3>Handle Images:</h3>
@@ -222,7 +222,31 @@ export default class Collage extends React.Component {
               <input onChange={(e)=> this.handleFilter(e)} id="brightness" type="checkbox" />
               <label>
                 Value:
-                <input onChange={(e)=> this.filterValue(e)} id="brightness-value" name="brightness" value="1" min="0.2" max="2.2" step="0.003921" type="range" />
+                <input onChange={(e)=> this.filterValue(e)} id="brightness-value" name="brightness" value="1" min="0.2" max="2.2" type="range" />
+              </label>
+            </p>
+            <p>
+              <span>Noise:</span>
+              <input onChange={(e)=> this.handleFilter(e)} id="noise" type="checkbox" />
+              <label>
+                Value:
+                <input onChange={(e)=> this.filterValue(e)} id="noise-value" name="noise" value="100" min="0" max="1000" type="range" />
+              </label>
+            </p>
+            <p>
+              <span>Pixelate:</span>
+              <input onChange={(e)=> this.handleFilter(e)} id="pixelate" type="checkbox" />
+              <label>
+                Value:
+                <input onChange={(e)=> this.filterValue(e)} id="pixelate-value" name="pixelate" value="0" min="-1" max="1" step="0.1" type="range" />
+              </label>
+            </p>
+            <p>
+              <span>Hue Rotation:</span>
+              <input onChange={(e)=> this.handleFilter(e)} id="hue-rotation" type="checkbox" />
+              <label>
+                Value:
+                <input onChange={(e)=> this.filterValue(e)} id="hue-value" name="hue-rotation" value="0" min="-1" max="1" type="range" />
               </label>
             </p>
 
@@ -235,6 +259,6 @@ export default class Collage extends React.Component {
           </div>
         </div>
       </div>
-      )
-    }
+    )
   }
+}
