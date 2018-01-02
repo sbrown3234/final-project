@@ -172,7 +172,7 @@ export default class Collage extends React.Component {
     if (index == 2) {
       console.log('index: ', e.target.value)
       this.applyFilterValue(2, e.target.name, e.target.value);
-    } else if (index == )
+    }
   }
 
 

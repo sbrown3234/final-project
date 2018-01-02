@@ -18,7 +18,7 @@
 
   if (process.env.NODE_ENV != 'production') {
     app.use('/bundle.js', require('http-proxy-middleware')({target: 'http://localhost:8081/'}));
-  } else {
+  }
 
 
 
@@ -461,8 +461,7 @@ app.get('*', function(req, res) {
 });
 
 
-server.listen(process.env.PORT || 8081)
+server.listen(process.env.PORT || 8080)
 
-}
 
 })();
