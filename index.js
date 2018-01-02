@@ -18,7 +18,9 @@
 
   if (process.env.NODE_ENV != 'production') {
     app.use('/bundle.js', require('http-proxy-middleware')({target: 'http://localhost:8081/'}));
-  }
+  } else {
+
+
 
   app.use(express.static(__dirname + '/uploads'));
 
@@ -460,5 +462,7 @@ app.get('*', function(req, res) {
 
 
 server.listen(process.env.PORT || 8081)
+
+}
 
 })();
