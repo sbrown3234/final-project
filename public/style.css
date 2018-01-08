@@ -140,12 +140,17 @@ input {
   max-height: 600px;
 }
 
-.profile-image {
+.headline-container {
   position: absolute;
   display: flex;
   flex-direction: column;
+  justify-content: space-around;
   top: 60%;
   z-index: 1000;
+}
+
+.profile-image {
+  text-align: center;
 }
 
 .profile-image img{
@@ -157,11 +162,6 @@ input {
 .user-image {
   height: 75px;
   width: 100px;
-}
-
-.request-button {
-  position: relative;
-  padding-top: 160px;
 }
 
 
@@ -248,8 +248,32 @@ footer a {
 }
 
 .result-list {
+  position: absolute;
+  width: 200px;
   z-index: 100;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: left;
 }
+
+.result-list li {
+  width: 100%;
+  float: left;
+  border-bottom: 2px solid pink;
+  padding: 4px 0px;
+}
+
+.result-list img {
+  padding-right: 5px;
+}
+
+ ul {
+   margin: 0px;
+   padding: 0px;
+   list-style: none;
+ }
 
 .search-pic {
   height: 40px;
@@ -371,7 +395,7 @@ footer a {
   width: 50px;
 }
 
-.whateva {
+.user-messages {
   padding: 5px 0px;
   border: dotted rgba(255,255,255,0.5);
   display: flex;
@@ -380,7 +404,7 @@ footer a {
   justify-content: center;
 }
 
-.whateva p {
+.user-messages p {
   font-family: Arvo;
   font-size: 13px;
   text-align: left;
@@ -418,15 +442,18 @@ footer a {
   color: white;
 }
 
-#can {
+#canvas {
   height: 100vh;
   width: 100%;
   background-image: url('./images/ps-jan7-1873_lead.jpg');
   background-repeat: no-repeat;
   background-size: cover;
+  overflow: scroll;
 }
 
 #collage-container {
+  height: 100vh;
+  width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -439,9 +466,20 @@ footer a {
   padding: 10px;
 }
 
+#save {
+  display: flex;
+  flex-direction: row;
+  padding: 10px;
+}
+
 .save-button {
   height: 10px;
   width: 100px;
+}
+
+#panel-container {
+  display: flex;
+  flex-direction: column;
 }
 
 .controls {
@@ -466,6 +504,7 @@ footer a {
   display: flex;
   flex-direction: column;
   align-self: flex-end;
+  background: rgba(0,0,0,0.5);
   overflow: scroll;
 }
 
