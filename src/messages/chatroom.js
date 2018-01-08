@@ -7,7 +7,7 @@ export default function Chatroom({ messages }) {
 
 
   return (
-    <div className="whateva">
+    <div className="user-messages">
     <div className="user">
       <Link to={`user/profile/${id}`}><img className="message-pic" src={profile_pic} /></Link>
       <p>{firstname} {lastname}</p><p>{created_at}</p>
