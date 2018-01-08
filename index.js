@@ -48,7 +48,7 @@
 
   app.use(cookieSession({
     name: 'session',
-    secret: 'I was made to believe there was something wrong with me',
+    secret: process.env.SECRET || 'I was made to believe there was something wrong with me',
     maxAge: 1000 * 60 * 60 * 24 * 14
   }));
 
@@ -459,6 +459,6 @@ app.get('*', function(req, res) {
 });
 
 
-server.listen(8080)
+server.listen(process.env.PORT || 8080)
 
 })();

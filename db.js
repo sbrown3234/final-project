@@ -1,6 +1,6 @@
 (function(){
   var spicedPg = require('spiced-pg');
-  var db = spicedPg('postgres:postgres:postgres@localhost:5432/snetwork');
+  var db = spicedPg(process.env.DATABASE_URL || 'postgres:postgres:postgres@localhost:5432/snetwork');
   var bcrypt = require('bcryptjs');
 
   exports.newUser = (data, profile) => {
