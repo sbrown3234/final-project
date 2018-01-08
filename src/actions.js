@@ -56,7 +56,6 @@ export function onlineUsers(data) {
 }
 
 export function chatMessage({message}) {
-  console.log('pic: ', message)
   return {
     type: "NEW_MESSAGE",
     message: message
@@ -72,7 +71,6 @@ export function chatMessages(messages) {
 
 export function getDMs(id) {
   return axios.get('/dm/'+id).then(({data})=> {
-    console.log('in getDMS: ', data)
     return {
       type: "DIRECT_MESSAGES",
       DMs: data.messages
@@ -90,9 +88,38 @@ export function directMessage(message) {
   }
 }
 
+export function insertComment(id) {
+  return axios.post('/comment/'+id).then(({data}) => {
+    console.log('in getImage: ', data)
+    return {
+      type: "GET_IMAGE",
+      comment: data
+    }
+  })
+}
+
+export function getComments(id) {
+  return axios.get('/comments/'+id).then(({data}) => {
+    console.log('in getComments: ', data)
+    return {
+      type: "GET_COMMENTS",
+      comments: data
+    }
+  })
+}
+
+export function getImage(id) {
+  return axios.get('/image/'+id).then(({data}) => {
+    console.log('in getImage: ', data)
+    return {
+      type: "GET_IMAGE",
+      image: data
+    }
+  })
+}
+
 export function getImages() {
   return axios.get('/images').then(({data}) => {
-    console.log('in getImages action: ', data)
     return {
       type: "GET_IMAGES",
       images: data

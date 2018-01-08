@@ -28,25 +28,25 @@ export default class Register extends React.Component {
   handleSubmit(e) {
     const {firstname, lastname, email, password} = this.state;
 
-    if(!firstname || !lastname || !email || password) {
+    if(!firstname || !lastname || !email || !password === "") {
       this.setState({
         error: true
       })
+    } else {
+      const data = {firstname, lastname, email, password};
+
+      axios.post('/register', data).then((results) => {
+        if (results.data.success) {
+          location.replace("/");
+        } else {
+          this.setState({
+            error: true
+          })
+        }
+      }).catch((err) => {
+        console.log('aXIOS register post err: ', err)
+      })
     }
-
-    const data = {firstname, lastname, email, password};
-
-    axios.post('/register', data).then((results) => {
-      if (results.data.success) {
-        location.replace("/");
-      } else {
-        this.setState({
-          error: true
-        })
-      }
-    }).catch((err) => {
-      console.log('aXIOS register post err: ', err)
-    })
     e.preventDefault();
   }
 

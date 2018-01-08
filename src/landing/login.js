@@ -26,10 +26,10 @@ export default class Login extends React.Component {
 
 
   axios.post('/login', data).then((results) => {
-    console.log('in login post')
     if (results.data.success) {
       location.replace("/");
-    } else {
+    }
+    if (results.data.error) {
       this.setState({
         error: true
       })

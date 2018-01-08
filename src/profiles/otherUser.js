@@ -19,7 +19,7 @@ export default class OtherUser extends React.Component {
   )
 
   return (
-    <div id="fuck-this">
+    <div id="friends-list">
       {!users.length && <p>Looks like there's no collaboration taking place here</p>}
       {!!users.length && friends}
     </div>

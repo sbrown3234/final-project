@@ -52,7 +52,6 @@
     maxAge: 1000 * 60 * 60 * 24 * 14
   }));
 
-
   app.get('/logout', (req, res) => {
     req.session = null;
     res.redirect('/')
@@ -352,10 +351,9 @@ app.post('/submitCanvas', (req, res) => {
     let userId = req.session.user.id
     let canvas = req.body.data
 
-    console.log('in submit: ', canvas)
+    console.log('in submit: ', req.body)
 
     dbModule.submitCanvas(userId, canvas).then(() => {
-      console.log('in success')
       res.json({success: true})
     }).catch((err) => {
       console.log('saveImg error: ', err)
@@ -416,7 +414,7 @@ app.post('/login', (req, res) => {
       }
     })
   }).catch((err) => {
-    res.json({success: false})
+    res.json({error: true})
     console.log('login post err: ', err);
   })
 })
@@ -424,20 +422,16 @@ app.post('/login', (req, res) => {
 
 app.post('/register', (req, res) => {
 
-  if(!req.body.email || !req.body.password || !req.body.firstname || !req.body.lastname) {
-    res.json({success: false})
-  }
+    let profilePic = "https://api.adorable.io/avatars/200/abott@adorable.png"
 
-  let profilePic = "https://api.adorable.io/avatars/200/abott@adorable.png"
-
-  dbModule.newUser(req.body, profilePic).then((id) => {
-    dbModule.hashPassword(req.body.password, id)
-    req.session.user = {
-      id: id,
-      login: true
-    }
-    res.json({success: true})
-  })
+    dbModule.newUser(req.body, profilePic).then((id) => {
+      dbModule.hashPassword(req.body.password, id)
+      req.session.user = {
+        id: id,
+        login: true
+      }
+      res.json({success: true})
+    })
 })
 
 
@@ -451,13 +445,13 @@ app.get('/welcome', function(req, res) {
 
 
 app.get('*', function(req, res) {
-  if (!req.session.user) {
-    res.redirect('/welcome')
+  if (!req.session.user && req.url != '/welcome') {
+    res.redirect('/welcome');
+    return;
   } else {
     res.sendFile(__dirname + '/index.html');
   }
 });
-
 
 server.listen(8080)
 

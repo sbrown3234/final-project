@@ -51,7 +51,7 @@ CREATE TABLE collage (
 
 
 CREATE TABLE comments (
-  commenter_id integer,
+  user_id integer,
   image_id integer,
   comment text,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

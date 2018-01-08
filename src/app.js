@@ -141,6 +141,10 @@ export default class App extends React.Component {
     })
   }
 
+  shouldComponentUpdate() {
+    return true;
+  }
+
 
   render() {
     console.log('rendering app')
