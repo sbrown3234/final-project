@@ -146,12 +146,10 @@ export default class Collage extends React.Component {
       const index = filters.indexOf(e.target.id);
 
       if (index == 0) {
-        console.log('in apply image: ', f)
         this.applyImageFilter(index, e.target.id && new f.Invert())
       } else if (index == 1) {
         this.applyImageFilter(index, e.target.id && new f.Sepia())
       } else if (index == 2) {
-        console.log('in handleFilter')
         this.applyImageFilter(index, e.target.id && new f.Brightness({
           brightness: parseFloat($('#brightness-value').value)
         }));
@@ -170,7 +168,6 @@ export default class Collage extends React.Component {
       const { filters } = this.state
       const index = filters.indexOf(e.target.name);
       if (index == 2) {
-        console.log('index: ', e.target.value)
         this.applyFilterValue(2, e.target.name, e.target.value);
       }
     }

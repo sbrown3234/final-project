@@ -9,7 +9,7 @@
     return db.query(q, params).then((results) => {
       return results.rows[0].id;
     }).catch((err) =>
-    console.log('you fucked up the registration insert: ', err))
+    console.log('registration insert err: ', err))
   };
 
   exports.hashPassword = (userPassword, id) => {
