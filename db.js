@@ -110,11 +110,11 @@
 
   exports.getUsers = (id) => {
     const q = `SELECT users.id, firstname, lastname, profile_pic, status
-    FROM friend_requests
-    JOIN users
-    ON (status = 0 AND recipient_id = $1 AND sender_id = users.id)
-    OR (status = 1 AND recipient_id = $1 AND sender_id = users.id)
-    OR (status = 1 AND sender_id = $1 AND recipient_id = users.id)`
+              FROM friend_requests
+              JOIN users
+              ON (status = 0 AND recipient_id = $1 AND sender_id = users.id)
+              OR (status = 1 AND recipient_id = $1 AND sender_id = users.id)
+              OR (status = 1 AND sender_id = $1 AND recipient_id = users.id)`
     const params = [id];
     return db.query(q,params).then((results) => {
       return results.rows
@@ -130,10 +130,10 @@
 
   exports.checkStatus = (currUser, otherUser) => {
     const q = `SELECT status, sender_id
-    FROM friend_requests
-    WHERE ( sender_id = $1 AND recipient_id = $2 )
-    OR ( sender_id = $2 AND recipient_id = $1 )
-    ORDER BY updated_at DESC;`
+              FROM friend_requests
+              WHERE ( sender_id = $1 AND recipient_id = $2 )
+              OR ( sender_id = $2 AND recipient_id = $1 )
+              ORDER BY updated_at DESC;`
     const params = [currUser, otherUser];
     return db.query(q,params).then((results) => {
       return results.rows[0];
@@ -144,8 +144,8 @@
 
   exports.sendRequest = (currUser, otherUser) => {
     const q = `INSERT INTO friend_requests (sender_id, recipient_id, status, updated_at)
-    VALUES ($1, $2, $3, CURRENT_TIMESTAMP)
-    RETURNING id;`
+              VALUES ($1, $2, $3, CURRENT_TIMESTAMP)
+              RETURNING id;`
     const params = [currUser, otherUser, 0];
     return db.query(q,params).then((results) => {
       return results.rows[0];
@@ -156,9 +156,9 @@
 
   exports.acceptRequest = (currUser, otherUser) => {
     const q = `UPDATE friend_requests
-    SET status = $1, updated_at = CURRENT_TIMESTAMP
-    WHERE ( sender_id = $2 AND recipient_id = $3 )
-    OR  ( recipient_id = $2 AND sender_id = $3 );`
+              SET status = $1, updated_at = CURRENT_TIMESTAMP
+              WHERE ( sender_id = $2 AND recipient_id = $3 )
+              OR  ( recipient_id = $2 AND sender_id = $3 );`
     const params = [1, currUser, otherUser];
     return db.query(q,params).then((results) => {
       return results.rows[0]
@@ -169,9 +169,9 @@
 
   exports.cancelRequest = (currUser, otherUser) => {
     const q = `UPDATE friend_requests
-    SET status = $1, updated_at = CURRENT_TIMESTAMP
-    WHERE ( sender_id = $2 AND recipient_id = $3 )
-    OR  ( recipient_id = $2 AND sender_id = $3 );`
+              SET status = $1, updated_at = CURRENT_TIMESTAMP
+              WHERE ( sender_id = $2 AND recipient_id = $3 )
+              OR  ( recipient_id = $2 AND sender_id = $3 );`
     const params = [2, currUser, otherUser];
     return db.query(q,params).then((results) => {
       return results.rows[0]
@@ -182,15 +182,15 @@
 
   exports.getOnlineUserFriendsByIds = (userId, arrayOfUserIds) => {
     const q = `SELECT users.id, firstname, lastname, profile_pic, status
-    FROM users
-    LEFT JOIN friend_requests
-    ON status = 1
-    AND (
-      (recipient_id = users.id AND sender_id = ANY($2))
-      OR
-      (sender_id = users.id AND recipient_id = $1)
-    )
-    WHERE users.id = ANY($2)`
+              FROM users
+              LEFT JOIN friend_requests
+              ON status = 1
+              AND (
+                (recipient_id = users.id AND sender_id = ANY($2))
+                OR
+                (sender_id = users.id AND recipient_id = $1)
+              )
+              WHERE users.id = ANY($2)`
     const params = [userId, arrayOfUserIds]
     return db.query(q,params).then((results)=> {
       return results.rows
@@ -201,11 +201,11 @@
 
   exports.getMessages = () => {
     const q = `SELECT users.id, firstname, lastname, profile_pic, chat.created_at, chat.sender_id, chat.message
-    FROM users
-    JOIN chat
-    ON (sender_id = users.id)
-    AND (recipient_id IS NULL)
-    ORDER BY chat.created_at ASC;`
+              FROM users
+              JOIN chat
+              ON (sender_id = users.id)
+              AND (recipient_id IS NULL)
+              ORDER BY chat.created_at ASC;`
     return db.query(q).then((results) => {
       return results.rows
     }).catch((err) => {
@@ -226,12 +226,12 @@
 
   exports.userMessage = (userId) => {
     const q = `SELECT users.id, firstname, lastname, profile_pic, chat.created_at, sender_id, message
-    FROM users
-    JOIN chat
-    ON sender_id = users.id
-    WHERE sender_id = $1
-    ORDER BY chat.created_at DESC
-    LIMIT 1;`
+              FROM users
+              JOIN chat
+              ON sender_id = users.id
+              WHERE sender_id = $1
+              ORDER BY chat.created_at DESC
+              LIMIT 1;`
     const params = [userId]
     return db.query(q,params).then((results) => {
       console.log('results', results.rows)
@@ -254,14 +254,14 @@
 
   exports.userDMessage = (userId, otherId) => {
     const q = `SELECT users.id, firstname, lastname, profile_pic, chat.created_at, sender_id, message
-    FROM users
-    JOIN chat
-    ON sender_id = users.id
-    WHERE (
-      sender_id = $1 AND recipient_id = $2
-    )
-    ORDER BY chat.created_at DESC
-    LIMIT 1;`
+              FROM users
+              JOIN chat
+              ON sender_id = users.id
+              WHERE (
+                sender_id = $1 AND recipient_id = $2
+              )
+              ORDER BY chat.created_at DESC
+              LIMIT 1;`
     const params = [userId, otherId]
     return db.query(q,params).then((results) => {
       console.log('results', results.rows)
@@ -273,15 +273,15 @@
 
   exports.getDMs = (userId, otherId) => {
     const q = `SELECT users.id, firstname, lastname, profile_pic, chat.created_at, sender_id, message
-    FROM users
-    JOIN chat
-    ON sender_id = users.id
-    WHERE (
-      sender_id = $1 AND recipient_id = $2
-    ) OR (
-      sender_id = $2 AND recipient_id = $1
-    )
-    ORDER BY chat.created_at ASC;`
+              FROM users
+              JOIN chat
+              ON sender_id = users.id
+              WHERE (
+                sender_id = $1 AND recipient_id = $2
+              ) OR (
+                sender_id = $2 AND recipient_id = $1
+              )
+              ORDER BY chat.created_at ASC;`
     params = [userId, otherId]
     return db.query(q, params).then((results) => {
       return results.rows
@@ -292,15 +292,15 @@
 
   exports.getAllDMs = (id) => {
     const q = `SELECT users.id, firstname, lastname, profile_pic, chat.created_at, sender_id, message
-    FROM users
-    JOIN chat
-    ON users.id
-    WHERE (
-      sender_id = $1 AND recipient_id IS NOT NULL
-    ) OR (
-      recipient_id = $1
-    )
-    ORDER BY users.id, chat.created_at ASC;`
+              FROM users
+              JOIN chat
+              ON users.id
+              WHERE (
+                sender_id = $1 AND recipient_id IS NOT NULL
+              ) OR (
+                recipient_id = $1
+              )
+              ORDER BY users.id, chat.created_at ASC;`
     const params = [id]
     return db.query(q,params).then((results) => {
       console.log('getAllDms res: ', results.rows)
@@ -329,6 +329,14 @@
     })
   }
 
+  exports.getUserId = (socketId) => {
+    const q = `SELECT user_id FROM user_info WHERE (socket_id = $1);`
+    const params = [socketId];
+    return db.query(q, params).then((results) => {
+      return results.rows[0]
+    })
+  }
+
   exports.userLeft = (socketId) => {
     const q = `UPDATE user_info SET left_at = CURRENT_TIMESTAMP WHERE (socket_id = $1);`
     const params = [socketId];
@@ -337,28 +345,42 @@
     })
   }
 
-  exports.saveCanv = (data, id) => {
-    const q = `INSERT INTO collage (collage, user_id) VALUES ($1, $2);`
-    const params = [data, id];
-    return db.query(q, params).then((results) => {
-      return results.rows[0];
-    }).catch((err)=> {
-      console.log('insertCanv db err: ', err)
+  exports.canvasImage = (file, user) => {
+    const q = `INSERT INTO images (image_url, user_id) VALUES ($1, $2)`
+    const params = [file, user];
+    return db.query(q,params).then((results) => {
+      console.log('successful canvasImage insert ')
+    }).catch((err) => {
+      console.log('canvasImage err: ', err)
     })
-  };
+  }
 
   exports.submitCanvas = (id, data) => {
-    const q = `INSERT INTO images (user_id, image_url) VALUES ($1, $2)`
+    const q = `INSERT INTO collages (user_id, image_url) VALUES ($1, $2);`
     const params = [id, data];
-    return db.query(q, params).then((results) => {
-      console.log('success: ', results)
+    return db.query(q, params).then(() => {
+      console.log('successfully submitted')
     }).catch((err)=> {
       console.log('submitCanvas db err: ', err)
     })
   }
 
+  exports.getImage = (picId) => {
+    const q = `SELECT firstname, lastname, users.id, collages.created_at, collages.image_url
+              FROM users
+              JOIN collages
+              ON collages.user_id = users.id
+              WHERE collages.image_id = $1;`
+    const params = [picId]
+    return db.query(q, params).then((results)=> {
+      return results.rows[0]
+    }).catch((err)=> {
+      console.log('err in getImage: ', err)
+    })
+  }
+
   exports.getAllCanv = (id) => {
-    const q = `SELECT * FROM images WHERE (user_id = $1);`
+    const q = `SELECT * FROM collages WHERE (user_id = $1);`
     const params = [id]
     return db.query(q, params).then((results) => {
       return results.rows
@@ -366,6 +388,50 @@
       console.log('getAllCanv db err: ', err)
     })
   }
+
+  exports.getComments = (picId) => {
+    const q = `SELECT firstname, lastname, profile_pic, users.id, comment, comments.created_at
+               FROM users
+               JOIN comments
+               ON comments.user_id = users.id
+               WHERE comments.image_id = $1
+               ORDER BY comments.created_at ASC;`
+    const params = [picId]
+    return db.query(q,params).then((results) => {
+      return results.rows
+    }).catch((err) => {
+      console.log('getComments err: ', err)
+    })
+  }
+
+  exports.newComment = (userId, picId, comment) => {
+    const q = `INSERT INTO comments (user_id, image_id, comment)
+               VALUES ($1, $2, $3);`
+    const params = [userId, picId, comment]
+    return db.query(q, params).then((results) => {
+      return results.rows[0]
+    }).catch((err)=> {
+      console.log('err in newComment: ', err)
+    })
+  }
+
+  exports.getLastComment = (picId) => {
+    const q = `SELECT firstname, lastname, profile_pic, users.id, comment, comments.created_at
+               FROM users
+               JOIN comments
+               ON comments.user_id = users.id
+               WHERE comments.image_id = $1
+               ORDER BY comments.created_at DESC
+               LIMIT 1;`
+    const params = [picId]
+    return db.query(q, params).then((results) => {
+      console.log('getLastComment res: ', results.rows)
+      return results.rows[0];
+    }).catch((err) => {
+      console.log('getLastComment db err: ', err)
+    })
+  }
+
 
 
 

@@ -165,14 +165,17 @@ input {
 }
 
 
-.canv-images {
+.canvas-images {
   display: flex;
   overflow: scroll;
+  width: 80%;
 }
 
-.canv-images img {
-  padding: 5px;
-  height: 400px;
+
+.images {
+  max-width: 400px;
+  max-height: 500px;
+  padding: 5px 5px;
 }
 
 
@@ -508,6 +511,10 @@ footer a {
   overflow: scroll;
 }
 
+#hidden-canvas {
+  visibility: hidden;
+}
+
 .user-images {
   padding: 20px;
 }
@@ -515,6 +522,60 @@ footer a {
 .user-images h1 {
   text-align: center;
 }
+
+#selected-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+}
+
+#selected-title {
+  display: flex;
+  flex-direction: row;
+  justify-content: center
+  align-items: flex-start;
+}
+
+#image-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+}
+
+#selected-image {
+  max-width: 500px;
+}
+
+.comments {
+  display: flex;
+  flex-direction: column;
+  align-content: flex-start;
+  overflow: scroll;
+  max-width: 500px;
+}
+
+.comment-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.comment-title {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-content: flex-start;
+}
+
+#comment-input {
+  width: 100px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
 
 @media screen and (min-width: 760px) and (max-width: 1000px) {
   #profile-image {

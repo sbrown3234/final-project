@@ -23,7 +23,6 @@ export default class App extends React.Component {
     this.toggleBio = this.toggleBio.bind(this);
     this.upload = this.upload.bind(this);
     this.update = this.update.bind(this);
-
   }
 
   handlePic(e) {
@@ -139,6 +138,10 @@ export default class App extends React.Component {
     }).catch((err) => {
       console.log('axios get userInfo err: ', err)
     })
+  }
+
+  shouldComponentUpdate() {
+    return true;
   }
 
 

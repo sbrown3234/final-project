@@ -87,6 +87,23 @@ export function directMessage(message) {
   }
 }
 
+export function newComment(comment) {
+  return {
+    type: "NEW_COMMENT",
+    comment: comment
+  }
+}
+
+export function getImage(id) {
+  return axios.get('/image/'+id).then(({data}) => {
+    return {
+      type: "GET_IMAGE",
+      image: data.image,
+      comments: data.comments
+    }
+  })
+}
+
 export function getImages() {
   return axios.get('/images').then(({data}) => {
     return {

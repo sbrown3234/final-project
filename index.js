@@ -36,7 +36,7 @@
   var uploader = multer({
     storage: diskStorage,
     limits: {
-      fileSize: 2097152
+      fileSize: 2022840
     }
   });
 
@@ -44,14 +44,13 @@
 
   app.use(cookieParser());
   app.use(bodyParser.urlencoded({extended: false}));
-  app.use(bodyParser.json({limit: 2097152}))
+  app.use(bodyParser.json({limit: 2022840}))
 
   app.use(cookieSession({
     name: 'session',
     secret: process.env.SECRET || 'I was made to believe there was something wrong with me',
     maxAge: 1000 * 60 * 60 * 24 * 14
   }));
-
 
   app.get('/logout', (req, res) => {
     req.session = null;
@@ -120,9 +119,9 @@
       console.log("in new message")
       userId = user;
 
-        dbModule.chatMessage(userId, message).then( () => {
-          dbModule.userMessage(userId).then((results) => {
-              io.sockets.emit('chatMessage', {message: results})
+      dbModule.chatMessage(userId, message).then( () => {
+        dbModule.userMessage(userId).then((results) => {
+          io.sockets.emit('chatMessage', {message: results})
         })
       }).catch((err) => {
         console.log('chatMessage post err: ', err)
@@ -143,10 +142,28 @@
       dbModule.directMessage(userId, otherId, message).then( () => {
         dbModule.userDMessage(userId, otherId).then((results) => {
           console.log('res: ', results.profile_pic)
-        io.sockets.sockets[socketId].emit('directMessage', {message: results})
-      })
-    }).catch((err) => {
+          io.sockets.sockets[socketId].emit('directMessage', {message: results})
+        })
+      }).catch((err) => {
         console.log('newDM post err: ', err)
+      })
+    })
+
+    socket.on('comment', ({comment, picId}) => {
+
+      dbModule.getUserId(socketId).then((result) => {
+        let userId = result.user_id
+        dbModule.newComment(userId, picId, comment).then(() => {
+          dbModule.getLastComment(picId).then((results) => {
+            io.sockets.emit('newComment', {comment: results})
+          }).catch((err)=> {
+            console.log('/new-comment/ err: ', err)
+          })
+        }).catch((err) => {
+          console.log('/new-comment/ err: ', err)
+        })
+      }).catch((err)=> {
+        console.log('getUserId err: ', err)
       })
     })
 
@@ -273,106 +290,84 @@
           success: true,
           otherProf: results
         })
-    }).catch((err) => {
-      console.log('get opp user err: ', err)
-    })
-  }
-})
-
-app.get('/all-users', (req, res) => {
-  dbModule.getAllUsers().then((results) => {
-    res.json({data: results})
-  }).catch((err) => {
-    console.log('all users err: ', err)
-  })
-})
-
-
-app.post('/update', (req, res) => {
-  console.log(req.body.bio)
-  dbModule.updateBio(req.body.bio, req.session.user.id).then(() => {
-    res.json({success: true, bio: req.body.bio})
-  }).catch((err) => {
-    console.log('server update bio err: ', err)
-  })
-})
-
-app.post('/uploadCover', uploader.single('file'), (req, res) => {
-
-  s3.upload(req.file).then(() => {
-    let cover_photo = config.s3Url + req.file.filename
-    return dbModule.insertCover(cover_photo, req.session.user.id).then(() => {
-      res.json({success: true, image: cover_photo})
-    })
-  }).catch((err) => {
-    console.log('uploadCover err: ', err);
-    res.json({error: true})
-  })
-})
-
-
-app.post('/uploadImage', uploader.single('file'), (req, res) => {
-
-  s3.upload(req.file).then(() => {
-    let profile_pic = config.s3Url + req.file.filename
-    return dbModule.insertPic(profile_pic, req.session.user.id).then(() => {
-      res.json({success: true, image: profile_pic})
-    })
-  }).catch((err) => {
-    console.log('upload err: ', err);
-    res.json({error: true})
-  })
-})
-
-app.post('/uploadCanvasImage', uploader.single('file'), (req, res) => {
-  return dbModule.saveCanv(req.file.filename, req.session.user.id).then(() => {
-    let image = req.file.filename
-      res.json({success: true, image})
-  }).catch((err) => {
-    console.log('uploadCanvasImg err: ', err);
-    res.json({error: true})
-  })
-})
-
-app.post('/saveCanvas', (req, res) => {
-    let userId = req.session.user.id
-    let canvas = req.body.data
-
-    dbModule.saveCanv(canvas, userId).then(() => {
-      dbModule.getAllCanv(userId).then((results) => {
-        console.log('results: ', results)
+      }).catch((err) => {
+        console.log('get opp user err: ', err)
       })
-      res.json({success: true})
-    }).catch((err) => {
-      console.log('insertCavn error: ', err)
-    })
-});
+    }
+  })
 
-app.post('/submitCanvas', (req, res) => {
+  app.get('/all-users', (req, res) => {
+    dbModule.getAllUsers().then((results) => {
+      res.json({data: results})
+    }).catch((err) => {
+      console.log('all users err: ', err)
+    })
+  })
+
+
+  app.post('/update', (req, res) => {
+    console.log(req.body.bio)
+    dbModule.updateBio(req.body.bio, req.session.user.id).then(() => {
+      res.json({success: true, bio: req.body.bio})
+    }).catch((err) => {
+      console.log('server update bio err: ', err)
+    })
+  })
+
+  app.post('/uploadCover', uploader.single('file'), (req, res) => {
+
+    s3.upload(req.file).then(() => {
+      let cover_photo = config.s3Url + req.file.filename
+      return dbModule.insertCover(cover_photo, req.session.user.id).then(() => {
+        res.json({success: true, image: cover_photo})
+      })
+    }).catch((err) => {
+      console.log('uploadCover err: ', err);
+      res.json({error: true})
+    })
+  })
+
+
+  app.post('/uploadImage', uploader.single('file'), (req, res) => {
+
+    s3.upload(req.file).then(() => {
+      let profile_pic = config.s3Url + req.file.filename
+      return dbModule.insertPic(profile_pic, req.session.user.id).then(() => {
+        res.json({success: true, image: profile_pic})
+      })
+    }).catch((err) => {
+      console.log('upload err: ', err);
+      res.json({error: true})
+    })
+  })
+
+  app.post('/uploadCanvasImage', uploader.single('file'), (req, res) => {
+    return dbModule.canvasImage(req.file.filename, req.session.user.id).then(() => {
+      let image = req.file.filename
+      res.json({success: true, image})
+    }).catch((err) => {
+      console.log('uploadCanvasImg err: ', err);
+      res.json({error: true})
+    })
+  })
+
+  app.post('/submitCanvas', (req, res) => {
     let userId = req.session.user.id
     let canvas = req.body.data
-
-    console.log('in submit: ', canvas)
 
     dbModule.submitCanvas(userId, canvas).then(() => {
-      console.log('in success')
       res.json({success: true})
     }).catch((err) => {
-      console.log('saveImg error: ', err)
+      console.log('submitCanv error: ', err)
     })
-});
-
-app.get('/canvasImages', (req,res) => {
-  let userId = req.session.user.id
-  dbModule.getAllCanv(userId)
-})
+  });
 
 
-app.get('/userInfo', (req, res) => {
-  dbModule.userInfo(req.session.user.id).then((results) => {
-     if (!results.cover_photo) {
-      results.cover_photo = "http://panoramastudio-international.com/wp-content/uploads/2014/02/placeholder_image1.png"
-    }
+  app.get('/userInfo', (req, res) => {
+    dbModule.userInfo(req.session.user.id).then((results) => {
+      if (!results.cover_photo) {
+        results.cover_photo = "http://panoramastudio-international.com/wp-content/uploads/2014/02/placeholder_image1.png"
+      }
 
       res.json(results)
     }).catch((err) => {
@@ -399,66 +394,79 @@ app.get('/userInfo', (req, res) => {
     })
   })
 
+  app.get('/image/:id', (req, res) => {
+    let picId = req.params.id;
+    let userId = req.session.user.id;
+    let image;
 
-app.post('/login', (req, res) => {
-  dbModule.checkEmail(req.body.email).then((results) => {
-    let hash = results.hashed_pass;
-    let id = results.id;
-    dbModule.checkPassword(req.body.password, hash).then((match) => {
-      if (match == true) {
-        req.session.user = {
-          id: id,
-          login: true
-        }
-        res.json({success: true});
-      } else {
-        res.redirect('/')
-      }
+    dbModule.getImage(picId).then((result) => {
+      image = result;
+      dbModule.getComments(picId).then((results) => {
+        res.json({image: image, comments: results})
+      }).catch((err)=> {
+        console.log('get /image/:id err: ', err)
+      })
+    }).catch((err) => {
+      console.log('get /image/:id err: ', err)
     })
-  }).catch((err) => {
-    res.json({success: false})
-    console.log('login post err: ', err);
   })
-})
 
 
-app.post('/register', (req, res) => {
+  app.post('/login', (req, res) => {
+    dbModule.checkEmail(req.body.email).then((results) => {
+      let hash = results.hashed_pass;
+      let id = results.id;
+      dbModule.checkPassword(req.body.password, hash).then((match) => {
+        if (match == true) {
+          req.session.user = {
+            id: id,
+            login: true
+          }
+          res.json({success: true});
+        } else {
+          res.redirect('/')
+        }
+      })
+    }).catch((err) => {
+      res.json({error: true})
+      console.log('login post err: ', err);
+    })
+  })
 
-  if(!req.body.email || !req.body.password || !req.body.firstname || !req.body.lastname) {
-    res.json({success: false})
-  }
 
-  let profilePic = "https://api.adorable.io/avatars/200/abott@adorable.png"
+  app.post('/register', (req, res) => {
 
-  dbModule.newUser(req.body, profilePic).then((id) => {
-    dbModule.hashPassword(req.body.password, id)
-    req.session.user = {
-      id: id,
-      login: true
+    let profilePic = "https://api.adorable.io/avatars/200/abott@adorable.png"
+
+    dbModule.newUser(req.body, profilePic).then((id) => {
+      dbModule.hashPassword(req.body.password, id)
+      req.session.user = {
+        id: id,
+        login: true
+      }
+      res.json({success: true})
+    })
+  })
+
+
+  app.get('/welcome', function(req, res) {
+    if (req.session.user) {
+      res.redirect('/')
+    } else {
+      res.sendFile(__dirname + '/index.html');
     }
-    res.json({success: true})
-  })
-})
+  });
 
 
-app.get('/welcome', function(req, res) {
-  if (req.session.user) {
-    res.redirect('/')
-  } else {
-    res.sendFile(__dirname + '/index.html');
-  }
-});
+  app.get('*', function(req, res) {
+    if (!req.session.user && req.url != '/welcome') {
+      res.redirect('/welcome');
+      return;
+    } else {
+      res.sendFile(__dirname + '/index.html');
+    }
+  });
 
-
-app.get('*', function(req, res) {
-  if (!req.session.user) {
-    res.redirect('/welcome')
-  } else {
-    res.sendFile(__dirname + '/index.html');
-  }
-});
-
-
-server.listen(process.env.PORT || 8080)
+  server.listen(process.env.PORT || 8080)
 
 })();

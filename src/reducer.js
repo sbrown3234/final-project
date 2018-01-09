@@ -4,7 +4,8 @@ const defaultState = {
   messages: [],
   everyDM: [],
   images: [],
-  theirImages: []
+  theirImages: [],
+  comments: []
 }
 
 export default function(state = defaultState, action) {
@@ -74,7 +75,6 @@ export default function(state = defaultState, action) {
   }
 
   if (action.type == 'NEW_MESSAGE') {
-    console.log("new message: ", action.message)
     state = Object.assign({}, state, {
       messages: [...state.messages, action.message[0]]
     })
@@ -89,6 +89,20 @@ export default function(state = defaultState, action) {
   if (action.type == 'DIRECT_MESSAGE') {
     state = Object.assign({}, state, {
       dms: [...state.dms, action.message[0]]
+    })
+  }
+
+  if (action.type == 'NEW_COMMENT') {
+    console.log('in new comment: ', action.comment)
+    state = Object.assign({}, state, {
+      comments: [...state.comments, action.comment]
+    })
+  }
+
+  if (action.type == 'GET_IMAGE') {
+    state = Object.assign({}, state, {
+      comments: action.comments,
+      image: action.image
     })
   }
 

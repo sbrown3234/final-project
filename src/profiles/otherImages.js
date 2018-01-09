@@ -18,15 +18,15 @@ class OtherImages extends React.Component {
     const { theirImages } = this.props;
 
     const userImages = (
-      <div className ='canv-images'>
-        {theirImages.map(image => <Link to={`image/${image.image_id}`}><img src={image.image_url} /></Link> )}
+      <div className ='canvas-images'>
+        {theirImages.map(image => <Link to={`image/${image.image_id}`}><img className="images" src={image.image_url} /></Link> )}
       </div>
     )
 
     return (
       <div className ='user-images'>
         <h1>Recent Collages</h1>
-        {(theirImages.length == 0) && <div>No images to see here ;(</div>}
+        {!theirImages.length && <div>No images to see here ;(</div>}
         {userImages}
       </div>
     )
@@ -34,7 +34,6 @@ class OtherImages extends React.Component {
 }
 
 const mapStateToProps = function(state) {
-  console.log('in their images state: ', state)
   return {
     theirImages: state.theirImages.data
   }

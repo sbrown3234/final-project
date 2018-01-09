@@ -6,8 +6,6 @@ export default class OtherUser extends React.Component {
 
     const { users } = this.props
 
-    console.log("userId: ", users)
-
     const friends = (
       <div className="users">
         {users.map(user=> <div className="user">

@@ -45,12 +45,14 @@ export default class OP extends React.Component {
           lastname = {lastname}
           cover_photo = {cover_photo}
         />
+        <div className="headline-container">
         <Pic
           profile_pic = {profile_pic}
           firstname = {firstname}
           lastname = {lastname}
         />
         <Button otherId={id}/>
+      </div>
       </div>
         <div className="bio-friends">
           <div className="bio">

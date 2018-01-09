@@ -34,6 +34,7 @@ export default class Profile extends React.Component {
             handlePic = {handlePic}
             upload = {upload}
           />
+      <div className="headline-container">
         <Pic
           profile_pic = {profile_pic}
           firstname = {firstname}
@@ -44,6 +45,7 @@ export default class Profile extends React.Component {
           handlePic = {handlePic}
           upload = {upload}
         />
+      </div>
       </div>
         <div className="bio-friends">
           <Body

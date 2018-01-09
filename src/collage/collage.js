@@ -9,7 +9,7 @@ export default class Collage extends React.Component {
     this.state = {
       showChat: false,
       clipboard: null,
-      filters: ['invert', 'sepia','brightness', 'contrast', 'saturation', 'gamma', 'brightness']
+      filters: ['invert', 'sepia','brightness']
     };
     this.handleCopy = this.handleCopy.bind(this);
     this.handlePaste = this.handlePaste.bind(this);
@@ -21,19 +21,17 @@ export default class Collage extends React.Component {
     this.handleFilter = this.handleFilter.bind(this);
     this.applyImageFilter = this.applyImageFilter.bind(this);
     this.applyFilterValue = this.applyFilterValue.bind(this);
-    this.saveCanvas = this.saveCanvas.bind(this);
     this.submitCanvas = this.submitCanvas.bind(this);
   }
 
 
 
   componentDidMount() {
-    console.log('in comp mount')
     var canvas = new fabric.Canvas(this.refs.canvasEl);
-
-
+    var newCanvas = new fabric.StaticCanvas(this.refs.newCanvas);
     this.setState({
-      canvas: canvas
+      canvas: canvas,
+      newCanvas: newCanvas
     })
   }
 
@@ -62,9 +60,10 @@ export default class Collage extends React.Component {
   }
 
   removeItem() {
-    const { canvas } = this.state
+    const { canvas, newCanvas } = this.state
     var obj = canvas.getActiveObject()
     canvas.remove(obj)
+    newCanvas.remove(obj)
   }
 
   handlePaste() {
@@ -72,71 +71,14 @@ export default class Collage extends React.Component {
     canvas.add(clipboard)
   }
 
-
-  uploadImg() {
-    const { canvas, file } = this.state
-    var imgData = new FormData();
-    imgData.append('file', file)
-
-
-    axios.post('/uploadCanvasImage', imgData).then((results) => {
-      if(results.data.success) {
-        console.log('image uploaded: ', results.data.image)
-        fabric.Image.fromURL(results.data.image, (oImg) => {
-          canvas.add(oImg)
-        })
-      }
-    }).catch((err) => {
-      console.log('err in collage upload:', err)
-    })
-
-  }
-
-  saveCanvas(e) {
-    e.preventDefault()
-    const { canvas } = this.state
-
-    var data = canvas.toDataURL()
-
-    let transfer = {
-      data: data
-    }
-
-    axios.post('/saveCanvas', transfer).then((results) => {
-      if(results.data.success) {
-        console.log('success')
-
-      }
-    }).catch((err) => {
-      console.log('err in collage save:', err)
-    })
-  }
-
-  submitCanvas(e) {
-    e.preventDefault()
-    const { canvas } = this.state
-
-    var data = canvas.toDataURL()
-
-    var transfer = {
-      data: data
-    }
-
-    axios.post('/submitCanvas', transfer).then((results) => {
-      if(results.data.success) {
-        console.log('success')
-      }
-    }).catch((err) => {
-      console.log('err in collage submit:', err)
-    })
-  }
-
   applyImageFilter(index, filterName) {
-    const { canvas } = this.state;
+    console.log('running filter')
+    const { canvas, newCanvas } = this.state;
     var obj = canvas.getActiveObject();
     obj.filters[index] = filterName;
     obj.applyFilters();
     canvas.renderAll();
+    newCanvas.renderAll();
   }
 
   handleFilter(e) {
@@ -145,9 +87,10 @@ export default class Collage extends React.Component {
     const index = filters.indexOf(e.target.id);
 
     if (index == 0) {
-      this.applyImageFilter(index, this.checked && new f.Invert())
+      console.log('in invert')
+      this.applyImageFilter(index, e.target.id && new f.Invert())
     } else if (index == 1) {
-      this.applyImageFilter(index, this.checked && new f.Sepia())
+      this.applyImageFilter(index, e.target.id && new f.Sepia())
     } else if (index == 2) {
       console.log('in handleFilter')
       this.applyImageFilter(index, e.target.id && new f.Brightness({
@@ -157,11 +100,12 @@ export default class Collage extends React.Component {
   }
 
   applyFilterValue(index, prop, value) {
-    const { canvas } = this.state
+    const { canvas, newCanvas } = this.state
     var obj = canvas.getActiveObject();
     obj.filters[index][prop] = value;
     obj.applyFilters();
     canvas.renderAll();
+    newCanvas.renderAll();
   }
 
   filterValue(e) {
@@ -174,9 +118,48 @@ export default class Collage extends React.Component {
   }
 
 
+  uploadImg() {
+    const { canvas, file, newCanvas } = this.state
+
+    var imgData = new FormData();
+    imgData.append('file', file)
+
+
+    axios.post('/uploadCanvasImage', imgData).then((results) => {
+      if(results.data.success) {
+        fabric.Image.fromURL(results.data.image, (oImg) => {
+          canvas.add(oImg)
+          newCanvas.add(oImg)
+        })
+      }
+    }).catch((err) => {
+      console.log('err in collage upload:', err)
+    })
+
+  }
+
+  submitCanvas(e) {
+    e.preventDefault()
+    const { canvas , newCanvas } = this.state
+
+    let data = newCanvas.toDataURL()
+
+    console.log('data: ', data)
+    console.log('canvas: ', canvas.toDataURL())
+
+    axios.post('/submitCanvas', {data: data}).then((results) => {
+      if(results.data.success) {
+        console.log('success')
+      }
+    }).catch((err) => {
+      console.log('err in collage submit:', err)
+    })
+  }
+
+
   render() {
 
-    const { showChat, clipboard } = this.state
+    const { showChat, saved, clipboard } = this.state
     const { chatMessages, handleChange, sendMessage } = this.props
 
     const styleCanv1 = {
@@ -199,31 +182,29 @@ export default class Collage extends React.Component {
 
 
           <div id="canvas-container">
-
             <canvas width="800" height="600" ref="canvasEl" style={styleCanv1} className="lower-canvas"></canvas>
             <div id="save">
-              <button className="save-button" type="submit" onClick={(e)=> this.saveCanvas(e)}>Save Image!</button>
-              <button className="save-button" type="submit" onClick={(e)=> this.submitCanvas(e)}>Submit Image!</button>
+              <button className="save-button" type="submit" onClick={(e)=> this.submitCanvas(e)}>Submit</button>
             </div>
 
           </div>
-
+          {!!saved && <div></div> }
           <div id="panel-container">
 
             <div className="controls">
               <br/>
               <h3>Copy/Paste Images:</h3>
-              <button onClick={this.handleCopy}>Copy Selected Object</button>
+              <button onClick={() => this.handleCopy()}>Copy Selected Object</button>
               <button onClick={() => this.handlePaste()}>Paste Selected Object</button>
-              <button onClick={this.removeItem}>Remove Selected Object</button>
+              <button onClick={()=> this.removeItem()}>Remove Selected Object</button>
               <h3>Filters: </h3>
               <p>
                 <span>Invert: </span>
-                <input onChange={(e)=> this.handleFilter(e)} id="invert" type="checkbox" />
+                <input onClick={(e)=> this.handleFilter(e)} id="invert" type="checkbox" />
               </p>
               <p>
                 <span>Sepia: </span>
-                <input onChange={(e)=> this.handleFilter(e)} id="sepia" type="checkbox" />
+                <input onClick={(e)=> this.handleFilter(e)} id="sepia" type="checkbox" />
               </p>
 
               <p>
@@ -247,7 +228,10 @@ export default class Collage extends React.Component {
 
 
       </div>
-    </div>
+      <div id="hidden-canvas">
+        <canvas height="800" width="600" ref="newCanvas"></canvas>
+      </div>
+     </div>
   )
 }
 }

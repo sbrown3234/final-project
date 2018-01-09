@@ -35,23 +35,23 @@ CREATE TABLE chat (
   recipient_id integer
 );
 
-CREATE TABLE images (
+CREATE TABLE collages (
   image_id serial primary key,
   user_id integer,
   image_url text,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE collage (
+CREATE TABLE images (
   collage_id serial primary key,
   user_id integer,
-  collage text,
+  image_url text,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 
 CREATE TABLE comments (
-  commenter_id integer,
+  user_id integer,
   image_id integer,
   comment text,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
