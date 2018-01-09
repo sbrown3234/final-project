@@ -31,12 +31,13 @@ class Online extends React.Component {
 
     return (
       <div id="online-container">
-        <div id="online-friends">
-          <h3>Here are your friends online right now!</h3>
+        <div className="online-users">
+          <h1>Here are your friends!</h1>
+          {(onlineFriends.length==0) && <h2>Looks like no one's online...sorry!</h2>}
           {!!onlineFriends.length && friends}
         </div>
-        <div id="online-users">
-          <h3>Everyone online right now!</h3>
+        <div className="online-users">
+          <h1>Everyone online right now!</h1>
           {!!onlineUsers.length && strangers}
         </div>
       </div>

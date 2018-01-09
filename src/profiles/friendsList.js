@@ -17,7 +17,7 @@ class Friends extends React.Component {
     const { users, wannabies, endFriend, addFriend } = this.props;
     return(
           <div className="panel">
-            <h1>Notification Panel</h1>
+            <h1>Notification Panel:</h1>
             <div className="req-lists">
             <Pending  users={wannabies} addFriend={addFriend} endFriend={endFriend} />
             <Accepted users={users} endFriend={endFriend} />

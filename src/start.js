@@ -40,7 +40,7 @@ const loggedInRouter = (
         <Route path="/" component={App}>
         <Route path="/about" component={About}/>
         <Route path="/user/profile/:id" component={OP} />
-        <Route path="/image/:id" component={SelectedImage} />
+        <Route path="/image/:picId" component={SelectedImage} />
         <Route path="/online" component={Online} />
         <Route path="/public-chatroom" component={Chat} />
         <Route path="/collage" component={Collage} />

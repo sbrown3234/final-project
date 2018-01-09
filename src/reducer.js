@@ -63,7 +63,7 @@ export default function(state = defaultState, action) {
       return state;
     } else {
       state = Object.assign({}, state, {
-        onlineUsers: state.onlineUsers.concat(action.user)
+        onlineUsers: [...state.onlineUsers, action.user]
       })
     }
   }

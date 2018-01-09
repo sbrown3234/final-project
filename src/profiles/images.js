@@ -23,7 +23,7 @@ class Images extends React.Component {
 
     const userImages = (
       <div className ='canvas-images'>
-        {images.map(image => <Link to={`image/${image.image_id}`}><img className="images" src={image.image_url} /></Link>)}
+        {images.map(image => <Link to={`image/${image.image_id}`}><img className="images" src={image.image_url} /></Link> )}
       </div>
     )
 

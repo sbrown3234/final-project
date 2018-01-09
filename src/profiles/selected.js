@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import $ from 'jquery'
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { getImage } from '.././actions';
@@ -20,32 +21,34 @@ class SelectedImage extends React.Component {
   }
 
   newComment(e) {
-    getSocket().emit('comment', {comment: this.state.comment, picId: this.props.params.id})
+    getSocket().emit('comment', {comment: this.state.comment, picId: this.props.params.picId})
     e.preventDefault()
   }
 
   componentDidMount() {
-    var id = this.props.params.id;
+    var id = this.props.params.picId;
 
     this.props.getImage(id)
   }
 
   render(){
 
+    const { image, comments } = this.props
+
     if (!this.props.image) {
       return <div>Loading.... Please Wait</div>
     }
 
-    const { image, comments } = this.props
 
     const userComments = (
-      <div className="comments">
-        {comments.map(comment=> <div className="comment-container">
+      <div className="comment-container">
+        {comments.map(comment=>
+        <div className="comment">
           <div className="comment-title">
           <Link to={`user/profile/${comment.id}`}><img className="user-image" src={comment.profile_pic} /></Link>
           <p>{comment.firstname + " " + comment.lastname}</p>
           </div>
-          <div className="comment">
+          <div>
             <p>{comment.comment}</p>
           </div>
         </div>
@@ -61,11 +64,13 @@ class SelectedImage extends React.Component {
         </div>
         <img id="selected-image" src={image.image_url} />
       </div>
+      <div id="comment-field">
       {!!comments.length && userComments}
       <div id="comment-input">
-        <input onChange={(e) => this.handleComment(e)} type="text" name="comment" placeholder="Comment..." /><button onClick={(e) => this.newComment(e)} type="submit">Post</button>
+        <input id="comment-box" onChange={(e) => this.handleComment(e)} type="text" name="comment" placeholder="Comment..." /><button onClick={(e) => this.newComment(e)} type="submit">Post</button>
       </div>
     </div>
+  </div>
   )
 }
 }

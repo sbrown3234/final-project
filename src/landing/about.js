@@ -10,7 +10,7 @@ export default function About () {
           Made with the idea that the crowd can produce something great, s_(MASHED) seeks to change the way that we innovate.</p>
 
           <p ><strong>INVITE:</strong> Involve your friends in projects that you're working on. Whether it's a story, an image, a wireframe, or whatever the fuck,
-          create <i>together</i>. (Wo)Man is not an island, and you certainly don't have to be one in order to make something great. </p>
+          create <i>together</i>. Wo/man is not an island, and you certainly don't have to be one in order to make something great. </p>
         </div>
       </div>
     )

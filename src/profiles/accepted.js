@@ -11,7 +11,7 @@ export default class Accepted extends React.Component {
     }
 
     const acceptedFriends = (
-      <div className="accepted-users">
+      <div className="requested-users">
         {users.map(user => <User user={user} endFriend={endFriend} />)}
       </div>
     );

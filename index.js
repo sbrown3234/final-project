@@ -153,6 +153,7 @@
 
       dbModule.getUserId(socketId).then((result) => {
         let userId = result.user_id
+        console.log('userid: ', userId, result.user_id)
         dbModule.newComment(userId, picId, comment).then(() => {
           dbModule.getLastComment(picId).then((results) => {
             io.sockets.emit('newComment', {comment: results})
@@ -394,19 +395,14 @@
     })
   })
 
-  app.get('/image/:id', (req, res) => {
-    let picId = req.params.id;
+  app.get('/image/:picId', (req, res) => {
+    let picId = req.params.picId;
     let userId = req.session.user.id;
-    let image;
 
-    dbModule.getImage(picId).then((result) => {
-      image = result;
-      dbModule.getComments(picId).then((results) => {
-        res.json({image: image, comments: results})
-      }).catch((err)=> {
-        console.log('get /image/:id err: ', err)
-      })
-    }).catch((err) => {
+    Promise.all([dbModule.getImage(picId),
+                dbModule.getComments(picId)]).then((results) => {
+        res.json({image: results[0], comments: results[1]})
+      }).catch((err) => {
       console.log('get /image/:id err: ', err)
     })
   })

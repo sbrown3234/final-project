@@ -55,6 +55,13 @@ export function onlineUsers(data) {
   }
 }
 
+export function userJoined(data) {
+  return {
+    type: "USER_JOINED",
+    user: data,
+  }
+}
+
 export function chatMessage({message}) {
   return {
     type: "NEW_MESSAGE",
@@ -120,13 +127,6 @@ export function getTheirImages(otherId) {
       theirImages: data
     }
   })
-}
-
-export function userJoined(data) {
-  return {
-    type: "USER_JOINED",
-    user: data,
-  }
 }
 
 export function userLeft(data) {

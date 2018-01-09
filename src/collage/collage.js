@@ -67,8 +67,9 @@ export default class Collage extends React.Component {
   }
 
   handlePaste() {
-    const { clipboard, canvas } = this.state
+    const { clipboard, canvas, newCanvas } = this.state
     canvas.add(clipboard)
+    newCanvas.add(clipboard)
   }
 
   applyImageFilter(index, filterName) {
@@ -138,23 +139,24 @@ export default class Collage extends React.Component {
 
   }
 
+
+
   submitCanvas(e) {
     e.preventDefault()
     const { canvas , newCanvas } = this.state
 
-    let data = newCanvas.toDataURL()
-
-    console.log('data: ', data)
-    console.log('canvas: ', canvas.toDataURL())
-
-    axios.post('/submitCanvas', {data: data}).then((results) => {
-      if(results.data.success) {
-        console.log('success')
-      }
-    }).catch((err) => {
-      console.log('err in collage submit:', err)
-    })
-  }
+    this.setState({
+      newCanvas: newCanvas.renderAll(canvas)
+    }, () => {
+      axios.post('/submitCanvas', {data: newCanvas.toDataURL()}).then((results) => {
+        if(results.data.success) {
+          console.log('success')
+        }
+      }).catch((err) => {
+        console.log('err in collage submit:', err)
+      })
+    }
+  )}
 
 
   render() {
@@ -165,8 +167,8 @@ export default class Collage extends React.Component {
     const styleCanv1 = {
       border: '1px solid rgb(204, 204, 204)',
       position: 'absolute',
-      width: '500px',
-      height: '500px',
+      width: '600px',
+      height: '600px',
       left: '15px',
       touchAction: 'none',
       cursor: 'default'
@@ -182,7 +184,7 @@ export default class Collage extends React.Component {
 
 
           <div id="canvas-container">
-            <canvas width="800" height="600" ref="canvasEl" style={styleCanv1} className="lower-canvas"></canvas>
+            <canvas width="600" height="600" ref="canvasEl" style={styleCanv1} className="lower-canvas"></canvas>
             <div id="save">
               <button className="save-button" type="submit" onClick={(e)=> this.submitCanvas(e)}>Submit</button>
             </div>
@@ -207,14 +209,6 @@ export default class Collage extends React.Component {
                 <input onClick={(e)=> this.handleFilter(e)} id="sepia" type="checkbox" />
               </p>
 
-              <p>
-                  <span>Brightness:</span>
-                  <input onClick={(e)=> this.handleFilter(e)} id="brightness" type="checkbox" />
-                <label> <br/>
-                  Value:
-                  <input onChange={(e)=> this.filterValue(e)} id="brightness-value" name="brightness" value="1" min="0.2" max="2.2" step="0.003921" type="range" />
-                </label>
-              </p>
 
 
             <input onChange={(e) => this.handleImg(e)} type="file" name="file" />
@@ -226,10 +220,9 @@ export default class Collage extends React.Component {
 
         </div>
 
-
-      </div>
-      <div id="hidden-canvas">
-        <canvas height="800" width="600" ref="newCanvas"></canvas>
+        <div id="hidden-canvas">
+          <canvas style={styleCanv1} height="600" width="600" ref="newCanvas"></canvas>
+        </div>
       </div>
      </div>
   )

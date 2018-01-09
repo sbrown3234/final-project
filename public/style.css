@@ -144,7 +144,8 @@ input {
   position: absolute;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: center;
+  align-content: center;
   top: 60%;
   z-index: 1000;
 }
@@ -158,26 +159,6 @@ input {
   width: 300px;
   border: white 4px solid;
 }
-
-.user-image {
-  height: 75px;
-  width: 100px;
-}
-
-
-.canvas-images {
-  display: flex;
-  overflow: scroll;
-  width: 80%;
-}
-
-
-.images {
-  max-width: 400px;
-  max-height: 500px;
-  padding: 5px 5px;
-}
-
 
 #app {
   overflow: hidden;
@@ -335,9 +316,17 @@ footer a {
 
 .req-lists {
   display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
+  flex-direction: column;
+  justify-content: space-around;
   padding-left: 15px;
+}
+
+.requested-users {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  padding: 5px 5px;
 }
 
 #private-chat {
@@ -391,6 +380,8 @@ footer a {
 
 .message-input {
   width: 340px;
+  height: 35px;
+  font-size: 20px;
 }
 
 .message-pic {
@@ -415,9 +406,10 @@ footer a {
 
 .user {
   display: flex;
-  justify-content: space-between;
-  padding: 0;
-  margin: 0;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 5px 5px;
 }
 
 #dm-page {
@@ -451,7 +443,7 @@ footer a {
   background-image: url('./images/ps-jan7-1873_lead.jpg');
   background-repeat: no-repeat;
   background-size: cover;
-  overflow: scroll;
+  overflow: hidden;
 }
 
 #collage-container {
@@ -512,29 +504,42 @@ footer a {
 }
 
 #hidden-canvas {
+  z-index: -10000;
+  position: absolute;
   visibility: hidden;
 }
 
 .user-images {
   padding: 20px;
-}
-
-.user-images h1 {
-  text-align: center;
-}
-
-#selected-container {
   display: flex;
+  position: relative;
   flex-direction: column;
   justify-content: center;
   align-content: center;
+  width: 80%;
+}
+
+.canvas-images {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  height: 500px;
+  max-width: 100%;
+  overflow-x: scroll;
+}
+
+#selected-container {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
 }
 
 #selected-title {
-  display: flex;
-  flex-direction: row;
-  justify-content: center
-  align-items: flex-start;
+  display: inline-block;
 }
 
 #image-container {
@@ -545,37 +550,75 @@ footer a {
 }
 
 #selected-image {
-  max-width: 500px;
+  max-width: 600px;
 }
 
-.comments {
+#comment-field {
   display: flex;
   flex-direction: column;
-  align-content: flex-start;
-  overflow: scroll;
-  max-width: 500px;
+  overflow: auto;
 }
 
 .comment-container {
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  max-width: 500px;
+  max-height: 400px;
+  overflow: scroll;
+  border: 2px dashed grey;
+}
+
+.comment {
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: space-between;
+  border: 2px solid grey;
+  padding: 5px 0px;
 }
 
 .comment-title {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-content: flex-start;
+  align-content: center;
+  width: 100%;
+}
+
+.comment-title img {
+  max-width: 200px;
 }
 
 #comment-input {
-  width: 100px;
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: space-between;
+  align-content: flex-start;
 }
 
+#comment-box {
+  height: 25px;
+  width: 200px;
+}
+
+#online-container {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-content: center;
+}
+
+.online-users {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  max-height: 600px;
+  width: 600px;
+  overflow: auto;
+}
 
 @media screen and (min-width: 760px) and (max-width: 1000px) {
   #profile-image {
