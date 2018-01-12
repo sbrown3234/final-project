@@ -519,6 +519,10 @@ footer a {
   width: 80%;
 }
 
+.user-image {
+  max-height: 200px;
+}
+
 .canvas-images {
   display: flex;
   flex-direction: row;

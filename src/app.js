@@ -84,9 +84,10 @@ export default class App extends React.Component {
     const { file, coverPhoto } = this.state;
     console.log('running profile pic upload')
 
-    if (!!file) {
+    if (file) {
       let formData = new FormData();
       formData.append("file", file);
+
 
       axios.post('/uploadImage', formData).then((results) => {
 
@@ -102,10 +103,9 @@ export default class App extends React.Component {
       e.preventDefault();
     }
 
-    if (!!coverPhoto) {
+    if (coverPhoto) {
       let formData = new FormData();
       formData.append("file", coverPhoto);
-      console.log('running upload, file state: ', coverPhoto)
 
 
       axios.post('/uploadCover', formData).then((results) => {

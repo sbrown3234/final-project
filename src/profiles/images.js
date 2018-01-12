@@ -30,7 +30,7 @@ class Images extends React.Component {
     return (
       <div className="user-images">
         <h1>Recent Collages</h1>
-        {(images.length === 0) && <div>Get to <Link to="/collage">work</Link>!</div>}
+        {(images.length === 0) && <div><p>Get to <Link to="/collage">work</Link>!</p></div>}
         {userImages}
       </div>
     )

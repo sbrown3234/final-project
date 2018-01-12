@@ -409,6 +409,7 @@
 
 
   app.post('/login', (req, res) => {
+    console.log('in login:', req.body)
     dbModule.checkEmail(req.body.email).then((results) => {
       let hash = results.hashed_pass;
       let id = results.id;

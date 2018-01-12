@@ -13,47 +13,45 @@ smashing.</p>
     <li>Database Management: PostgresSQL</li>
     <li>Content Management: Amazon Web Services</li>
   </ul>
-  
+
 <h1>Landing Page</h1>
-<img style="height:300px; width:300px;" src="./assets/landing-view">
+<img style="height:300px; width:300px;" src="./assets/landing-page.gif">
 <p>Users are greeted with a landing page that lets them read about the philosophy of s_(MASHED) and then navigate to the
 Registration / Login page.</p>
 
 <h1>Profile</h1>
-<img style="height:300px; width:300px;" src="./assets/profile">
+<img style="height:300px; width:300px;" src="./assets/profile.gif">
 <p>Users are led to their homepage where they can upload their own profile picture and cover photo, as well as write a short bio
 about themselves and their interests.</p>
 
 <h1>Collage</h1>
-<img style="height:300px; width:300px;" src="./assets/collage1">
-<p>Users can navigate to the collage inerface through the nav-bar where they are able to upload images and rearrange them on the 
-canvas, applying filters or resizing and rotating them to their heart's content. After creating their collage, users have the 
+<img style="height:300px; width:300px;" src="./assets/collage-demo1.png">
+<p>Users can navigate to the collage interface through the nav-bar where they are able to upload images and rearrange them on the
+canvas, applying filters or resizing and rotating them to their heart's content. After creating their collage, users have the
 option to submit their collages, publishing them on their personal profile page and allowing other users to view and comment on them.
-Also, if a user runs into a bit of trouble while making an image, they can toggle the public chatroom to ask a question of the 
+Also, if a user runs into a bit of trouble while making an image, they can toggle the public chatroom to ask a question of the
 s_(MASHED) community</p>
   <div style="display:flex; flex-direction: row; justify-content: space-between; align-items: center;">
-    <img style="height:300px; width:300px;" src="./assets/collag2">
-    <img style="height:300px; width:300px;" src="./assets/collage3">
+    <img style="height:300px; width:300px;" src="./assets/collage-demo2.png">
+    <img style="height:300px; width:300px;" src="./assets/collage-demo.gif">
   </div>
 
 <h1>Public Chat</h1>
-<img style="height:300px; width:300px;" src="./assets/public-chat">
+<img style="height:300px; width:300px;" src="./assets/public-chat.gif">
 <p>A public chatroom is available to all users and encourages them to meet other users and share their own work.</p>
 
 <h1>Other Users' Profiles</h1>
   <div style="display:flex; flex-direction: row; justify-content: space-between; align-items: center;">
-    <img style="height:300px; width:300px;" src="./assets/search">
-    <img style="height:300px; width:300px;" src="./assets/search">
+    <img style="height:300px; width:300px;" src="./assets/search.gif">
+    <img style="height:300px; width:300px;" src="./assets/other-profiles.gif">
   </div>
  <p>Users can navigate to other users' profiles using two methods: the search bar or by clicking on their profile picture
   in the chatroom. Once there, they can request a Collab Request, if they haven't already, see their list of friends,
-  or see the collages that they've created. Additionally, users are able to send one another private messages after 
+  or see the collages that they've created. Additionally, users are able to send one another private messages after
   accepting a collab request.</p>
-  
-  <div style="display:flex; flex-direction: row; justify-content: space-between; align-items: center;">
-    <img style="height:300px; width:300px;" src="./assets/user-images">
-    <img style="height:300px; width:300px;" src="./assets/dm">
-  </div>
+
+  <img style="height:300px; width:300px;" src="./assets/dm.gif">
+
 
 <h1>Features In-Development</h1>
   <ul>

@@ -58,7 +58,7 @@ export default class OP extends React.Component {
           <div className="bio">
             <h1>About {firstname}:</h1>
             {!bio && <p>Looks like {firstname} is too busy to tell you about themselves</p>}
-            {bio}
+            <p>{bio}</p>
           </div>
           <div className="other-container">
           <h1>Comrades-In-Collaboration</h1>
